@@ -8,12 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		22E0C8D5917760EE642302C8 /* Pods_VIDEO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84B7483657FBF3605986B7C7 /* Pods_VIDEO.framework */; };
+		AA0DCF1728DB170F004281DE /* UISegmentedControl+WithoutBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF0728DB170F004281DE /* UISegmentedControl+WithoutBorder.m */; };
+		AA0DCF1828DB170F004281DE /* ICGRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF0A28DB170F004281DE /* ICGRulerView.m */; };
+		AA0DCF1928DB170F004281DE /* ICGVideoTrimmerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF0B28DB170F004281DE /* ICGVideoTrimmerView.m */; };
+		AA0DCF1A28DB170F004281DE /* ICGThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF0D28DB170F004281DE /* ICGThumbView.m */; };
+		AA0DCF1B28DB170F004281DE /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF1028DB170F004281DE /* Utility.m */; };
+		AA0DCF1C28DB170F004281DE /* MKOVideoMerge.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF1228DB170F004281DE /* MKOVideoMerge.m */; };
+		AA0DCF1D28DB170F004281DE /* YView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF1528DB170F004281DE /* YView.m */; };
+		AA5EE98528E1E203002B5D63 /* CustomViedeoComObjToSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5EE98428E1E203002B5D63 /* CustomViedeoComObjToSwift.swift */; };
 		AA62233628C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA62233428C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift */; };
 		AA62233728C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA62233528C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib */; };
+		AA62C7F328DC613E007212C6 /* MKOVideoMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA62C7F228DC613E007212C6 /* MKOVideoMerge.swift */; };
+		AA9BCB5528D9CD5D004C186D /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BCB5428D9CD5D004C186D /* RangeSlider.swift */; };
+		AA9BCB5828D9FE8E004C186D /* FrameCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BCB5628D9FE8E004C186D /* FrameCollectionViewCell.swift */; };
+		AA9BCB5928D9FE8E004C186D /* FrameCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA9BCB5728D9FE8E004C186D /* FrameCollectionViewCell.xib */; };
 		AAA8ECF328D76196005A4739 /* ExportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA8ECF128D76196005A4739 /* ExportViewController.swift */; };
 		AAA8ECF428D76196005A4739 /* ExportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAA8ECF228D76196005A4739 /* ExportViewController.xib */; };
 		AAB3AB3028D1DD6A003C56BA /* StickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB3AB2E28D1DD6A003C56BA /* StickerView.swift */; };
 		AAB3AB3128D1DD6A003C56BA /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = AAB3AB2F28D1DD6A003C56BA /* LICENSE */; };
+		AAC17D3F28E05E1200B0DDB8 /* CustomVideoCompositor.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC17D3D28E05E1200B0DDB8 /* CustomVideoCompositor.m */; };
+		AAC17D4128E0647C00B0DDB8 /* CustomAV.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC17D4028E0647C00B0DDB8 /* CustomAV.swift */; };
 		AAD0B45E28C5DEE200DE2333 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B45D28C5DEE200DE2333 /* AppDelegate.swift */; };
 		AAD0B46028C5DEE200DE2333 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B45F28C5DEE200DE2333 /* SceneDelegate.swift */; };
 		AAD0B46228C5DEE200DE2333 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD0B46128C5DEE200DE2333 /* ViewController.swift */; };
@@ -217,12 +231,35 @@
 /* Begin PBXFileReference section */
 		84B7483657FBF3605986B7C7 /* Pods_VIDEO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VIDEO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3EF98A48D96D53BD2CAE2EC /* Pods-VIDEO.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VIDEO.release.xcconfig"; path = "Target Support Files/Pods-VIDEO/Pods-VIDEO.release.xcconfig"; sourceTree = "<group>"; };
+		AA0DCF0428DB170F004281DE /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
+		AA0DCF0628DB170F004281DE /* UISegmentedControl+WithoutBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UISegmentedControl+WithoutBorder.h"; sourceTree = "<group>"; };
+		AA0DCF0728DB170F004281DE /* UISegmentedControl+WithoutBorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UISegmentedControl+WithoutBorder.m"; sourceTree = "<group>"; };
+		AA0DCF0928DB170F004281DE /* ICGThumbView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICGThumbView.h; sourceTree = "<group>"; };
+		AA0DCF0A28DB170F004281DE /* ICGRulerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICGRulerView.m; sourceTree = "<group>"; };
+		AA0DCF0B28DB170F004281DE /* ICGVideoTrimmerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICGVideoTrimmerView.m; sourceTree = "<group>"; };
+		AA0DCF0C28DB170F004281DE /* ICGVideoTrimmer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICGVideoTrimmer.h; sourceTree = "<group>"; };
+		AA0DCF0D28DB170F004281DE /* ICGThumbView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICGThumbView.m; sourceTree = "<group>"; };
+		AA0DCF0E28DB170F004281DE /* ICGRulerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICGRulerView.h; sourceTree = "<group>"; };
+		AA0DCF0F28DB170F004281DE /* ICGVideoTrimmerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICGVideoTrimmerView.h; sourceTree = "<group>"; };
+		AA0DCF1028DB170F004281DE /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
+		AA0DCF1228DB170F004281DE /* MKOVideoMerge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKOVideoMerge.m; sourceTree = "<group>"; };
+		AA0DCF1328DB170F004281DE /* MKOVideoMerge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKOVideoMerge.h; sourceTree = "<group>"; };
+		AA0DCF1528DB170F004281DE /* YView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YView.m; sourceTree = "<group>"; };
+		AA0DCF1628DB170F004281DE /* YView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YView.h; sourceTree = "<group>"; };
+		AA5EE98428E1E203002B5D63 /* CustomViedeoComObjToSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViedeoComObjToSwift.swift; sourceTree = "<group>"; };
 		AA62233428C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarCollectionViewCell.swift; sourceTree = "<group>"; };
 		AA62233528C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolbarCollectionViewCell.xib; sourceTree = "<group>"; };
+		AA62C7F228DC613E007212C6 /* MKOVideoMerge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKOVideoMerge.swift; sourceTree = "<group>"; };
+		AA9BCB5428D9CD5D004C186D /* RangeSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
+		AA9BCB5628D9FE8E004C186D /* FrameCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameCollectionViewCell.swift; sourceTree = "<group>"; };
+		AA9BCB5728D9FE8E004C186D /* FrameCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FrameCollectionViewCell.xib; sourceTree = "<group>"; };
 		AAA8ECF128D76196005A4739 /* ExportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportViewController.swift; sourceTree = "<group>"; };
 		AAA8ECF228D76196005A4739 /* ExportViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExportViewController.xib; sourceTree = "<group>"; };
 		AAB3AB2E28D1DD6A003C56BA /* StickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StickerView.swift; sourceTree = "<group>"; };
 		AAB3AB2F28D1DD6A003C56BA /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		AAC17D3D28E05E1200B0DDB8 /* CustomVideoCompositor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomVideoCompositor.m; sourceTree = "<group>"; };
+		AAC17D3E28E05E1200B0DDB8 /* CustomVideoCompositor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomVideoCompositor.h; sourceTree = "<group>"; };
+		AAC17D4028E0647C00B0DDB8 /* CustomAV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAV.swift; sourceTree = "<group>"; };
 		AAD0B45A28C5DEE200DE2333 /* VIDEO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VIDEO.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAD0B45D28C5DEE200DE2333 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AAD0B45F28C5DEE200DE2333 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -617,6 +654,62 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA0DCF0328DB16E7004281DE /* objectiveC */ = {
+			isa = PBXGroup;
+			children = (
+				AA0DCF1428DB170F004281DE /* CustomView */,
+				AA0DCF1128DB170F004281DE /* MKOVideoMerge */,
+				AA0DCF0528DB170F004281DE /* SegmentedExtension */,
+				AA0DCF0828DB170F004281DE /* Source */,
+				AA0DCF0428DB170F004281DE /* Utility.h */,
+				AA0DCF1028DB170F004281DE /* Utility.m */,
+				AAC17D3E28E05E1200B0DDB8 /* CustomVideoCompositor.h */,
+				AAC17D3D28E05E1200B0DDB8 /* CustomVideoCompositor.m */,
+			);
+			path = objectiveC;
+			sourceTree = "<group>";
+		};
+		AA0DCF0528DB170F004281DE /* SegmentedExtension */ = {
+			isa = PBXGroup;
+			children = (
+				AA0DCF0628DB170F004281DE /* UISegmentedControl+WithoutBorder.h */,
+				AA0DCF0728DB170F004281DE /* UISegmentedControl+WithoutBorder.m */,
+			);
+			path = SegmentedExtension;
+			sourceTree = "<group>";
+		};
+		AA0DCF0828DB170F004281DE /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				AA0DCF0928DB170F004281DE /* ICGThumbView.h */,
+				AA0DCF0A28DB170F004281DE /* ICGRulerView.m */,
+				AA0DCF0B28DB170F004281DE /* ICGVideoTrimmerView.m */,
+				AA0DCF0C28DB170F004281DE /* ICGVideoTrimmer.h */,
+				AA0DCF0D28DB170F004281DE /* ICGThumbView.m */,
+				AA0DCF0E28DB170F004281DE /* ICGRulerView.h */,
+				AA0DCF0F28DB170F004281DE /* ICGVideoTrimmerView.h */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		AA0DCF1128DB170F004281DE /* MKOVideoMerge */ = {
+			isa = PBXGroup;
+			children = (
+				AA0DCF1228DB170F004281DE /* MKOVideoMerge.m */,
+				AA0DCF1328DB170F004281DE /* MKOVideoMerge.h */,
+			);
+			path = MKOVideoMerge;
+			sourceTree = "<group>";
+		};
+		AA0DCF1428DB170F004281DE /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				AA0DCF1528DB170F004281DE /* YView.m */,
+				AA0DCF1628DB170F004281DE /* YView.h */,
+			);
+			path = CustomView;
+			sourceTree = "<group>";
+		};
 		AA2D8CA628CF03DA004B023B /* picker */ = {
 			isa = PBXGroup;
 			children = (
@@ -639,6 +732,27 @@
 				AADD1FB228C9DF2500A6D38D /* PreviewView.swift */,
 			);
 			path = picker;
+			sourceTree = "<group>";
+		};
+		AA62C7F128DC613E007212C6 /* MKOVideoMerge */ = {
+			isa = PBXGroup;
+			children = (
+				AA62C7F228DC613E007212C6 /* MKOVideoMerge.swift */,
+				AAC17D4028E0647C00B0DDB8 /* CustomAV.swift */,
+				AA5EE98428E1E203002B5D63 /* CustomViedeoComObjToSwift.swift */,
+			);
+			name = MKOVideoMerge;
+			path = "trim-cut/MKOVideoMerge";
+			sourceTree = "<group>";
+		};
+		AA9BCB5328D9CD3F004C186D /* TrimSlider */ = {
+			isa = PBXGroup;
+			children = (
+				AA9BCB5428D9CD5D004C186D /* RangeSlider.swift */,
+				AA9BCB5628D9FE8E004C186D /* FrameCollectionViewCell.swift */,
+				AA9BCB5728D9FE8E004C186D /* FrameCollectionViewCell.xib */,
+			);
+			path = TrimSlider;
 			sourceTree = "<group>";
 		};
 		AAB3AB2C28D1DD6A003C56BA /* StickerView */ = {
@@ -680,6 +794,9 @@
 		AAD0B45C28C5DEE200DE2333 /* VIDEO */ = {
 			isa = PBXGroup;
 			children = (
+				AA62C7F128DC613E007212C6 /* MKOVideoMerge */,
+				AA0DCF0328DB16E7004281DE /* objectiveC */,
+				AA9BCB5328D9CD3F004C186D /* TrimSlider */,
 				AAB3AB2C28D1DD6A003C56BA /* StickerView */,
 				AA2D8CA628CF03DA004B023B /* picker */,
 				AAD0B47528C5E41F00DE2333 /* Video */,
@@ -1177,6 +1294,7 @@
 				AAD0B46528C5DEE200DE2333 /* Main.storyboard in Resources */,
 				AA62233728C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib in Resources */,
 				AADD1FA928C9DD6C00A6D38D /* ImagePreviewViewController.xib in Resources */,
+				AA9BCB5928D9FE8E004C186D /* FrameCollectionViewCell.xib in Resources */,
 				AADD1FC128C9DF2500A6D38D /* CustomFooterView.xib in Resources */,
 				AADD1FBB28C9DF2500A6D38D /* CustomHeaderView.xib in Resources */,
 			);
@@ -1244,6 +1362,7 @@
 				AADD215728CA0F7700A6D38D /* GPUImageColorMatrixFilter.m in Sources */,
 				AADD21B528CA0F7700A6D38D /* GPUImagePrewittEdgeDetectionFilter.m in Sources */,
 				AADD217628CA0F7700A6D38D /* GPUImageLanczosResamplingFilter.m in Sources */,
+				AA0DCF1928DB170F004281DE /* ICGVideoTrimmerView.m in Sources */,
 				AADD219428CA0F7700A6D38D /* GPUImageAverageColor.m in Sources */,
 				AADD21CF28CA0F7700A6D38D /* GPUImageColourFASTFeatureDetector.m in Sources */,
 				AADD218A28CA0F7700A6D38D /* GPUImagePoissonBlendFilter.m in Sources */,
@@ -1257,6 +1376,7 @@
 				AADD21AF28CA0F7700A6D38D /* GPUImageLocalBinaryPatternFilter.m in Sources */,
 				AADD212728CA0F7700A6D38D /* GPUImageTwoPassTextureSamplingFilter.m in Sources */,
 				AADD215628CA0F7700A6D38D /* GPUImageOverlayBlendFilter.m in Sources */,
+				AAC17D4128E0647C00B0DDB8 /* CustomAV.swift in Sources */,
 				AADD212A28CA0F7700A6D38D /* GPUImageChromaKeyFilter.m in Sources */,
 				AADD213928CA0F7700A6D38D /* GPUImageTwoInputFilter.m in Sources */,
 				AADD21CC28CA0F7700A6D38D /* GPUImageLookupFilter.m in Sources */,
@@ -1266,9 +1386,11 @@
 				AADD214C28CA0F7700A6D38D /* GPUImageHueFilter.m in Sources */,
 				AADD215C28CA0F7700A6D38D /* GPUImageHardLightBlendFilter.m in Sources */,
 				AADD218028CA0F7700A6D38D /* GPUImageTiltShiftFilter.m in Sources */,
+				AA0DCF1828DB170F004281DE /* ICGRulerView.m in Sources */,
 				AADD216328CA0F7700A6D38D /* GPUImageSaturationFilter.m in Sources */,
 				AADD218E28CA0F7700A6D38D /* GPUImageMaskFilter.m in Sources */,
 				AADD1FBA28C9DF2500A6D38D /* PhotoCaptureDelegate.swift in Sources */,
+				AA9BCB5828D9FE8E004C186D /* FrameCollectionViewCell.swift in Sources */,
 				AADD21C728CA0F7700A6D38D /* GPUImageLuminanceRangeFilter.m in Sources */,
 				AADD218828CA0F7700A6D38D /* GPUImageToneCurveFilter.m in Sources */,
 				AADD212F28CA0F7700A6D38D /* GPUImageSobelEdgeDetectionFilter.m in Sources */,
@@ -1278,9 +1400,11 @@
 				AADD21CE28CA0F7700A6D38D /* GPUImageFilter.m in Sources */,
 				AADD217A28CA0F7700A6D38D /* GPUImageFramebuffer.m in Sources */,
 				AADD218128CA0F7700A6D38D /* GPUImageContext.m in Sources */,
+				AA0DCF1A28DB170F004281DE /* ICGThumbView.m in Sources */,
 				AADD217928CA0F7700A6D38D /* GPUImageColorDodgeBlendFilter.m in Sources */,
 				AADD215F28CA0F7700A6D38D /* GPUImageOpeningFilter.m in Sources */,
 				AADD21AC28CA0F7700A6D38D /* GPUImageDirectionalNonMaximumSuppressionFilter.m in Sources */,
+				AA0DCF1B28DB170F004281DE /* Utility.m in Sources */,
 				AADD214D28CA0F7700A6D38D /* GPUImageKuwaharaRadius3Filter.m in Sources */,
 				AAD0B46228C5DEE200DE2333 /* ViewController.swift in Sources */,
 				AADD21A528CA0F7700A6D38D /* GPUImageRawDataInput.m in Sources */,
@@ -1301,6 +1425,7 @@
 				AADD21B728CA0F7700A6D38D /* GPUImagePerlinNoiseFilter.m in Sources */,
 				AADD217028CA0F7700A6D38D /* GPUImageStretchDistortionFilter.m in Sources */,
 				AADD215228CA0F7700A6D38D /* GPUImageGammaFilter.m in Sources */,
+				AA0DCF1728DB170F004281DE /* UISegmentedControl+WithoutBorder.m in Sources */,
 				AADD219728CA0F7700A6D38D /* GPUImageContrastFilter.m in Sources */,
 				AADD214928CA0F7700A6D38D /* GPUImageiOSBlurFilter.m in Sources */,
 				AADD21A828CA0F7700A6D38D /* GPUImageMonochromeFilter.m in Sources */,
@@ -1315,10 +1440,12 @@
 				AADD217B28CA0F7700A6D38D /* GPUImageLaplacianFilter.m in Sources */,
 				AADD21C128CA0F7700A6D38D /* GPUImageHighlightShadowFilter.m in Sources */,
 				AADD21AE28CA0F7700A6D38D /* GPUImageMedianFilter.m in Sources */,
+				AA0DCF1D28DB170F004281DE /* YView.m in Sources */,
 				AADD215328CA0F7700A6D38D /* GPUImageAlphaBlendFilter.m in Sources */,
 				AADD21BC28CA0F7700A6D38D /* GPUImageNormalBlendFilter.m in Sources */,
 				AADD218428CA0F7700A6D38D /* GPUImagePicture.m in Sources */,
 				AADD21A328CA0F7700A6D38D /* GPUImageRGBOpeningFilter.m in Sources */,
+				AA0DCF1C28DB170F004281DE /* MKOVideoMerge.m in Sources */,
 				AADD213C28CA0F7700A6D38D /* GPUImageGrayscaleFilter.m in Sources */,
 				AADD219628CA0F7700A6D38D /* GPUImageRGBDilationFilter.m in Sources */,
 				AADD21A728CA0F7700A6D38D /* GPUImageLowPassFilter.m in Sources */,
@@ -1327,6 +1454,7 @@
 				AADD21A428CA0F7700A6D38D /* GPUImageWhiteBalanceFilter.m in Sources */,
 				AADD215A28CA0F7700A6D38D /* GPUImageMultiplyBlendFilter.m in Sources */,
 				AADD214028CA0F7700A6D38D /* GPUImageSolarizeFilter.m in Sources */,
+				AA62C7F328DC613E007212C6 /* MKOVideoMerge.swift in Sources */,
 				AADD214B28CA0F7700A6D38D /* GPUImageTransformFilter.m in Sources */,
 				AADD215028CA0F7700A6D38D /* GPUImageBilateralFilter.m in Sources */,
 				AADD214428CA0F7700A6D38D /* GPUImageMissEtikateFilter.m in Sources */,
@@ -1360,6 +1488,7 @@
 				AADD213A28CA0F7700A6D38D /* GPUImageEmbossFilter.m in Sources */,
 				AADD212828CA0F7700A6D38D /* GPUImageUnsharpMaskFilter.m in Sources */,
 				AADD215D28CA0F7700A6D38D /* GPUImagePolarPixellateFilter.m in Sources */,
+				AA9BCB5528D9CD5D004C186D /* RangeSlider.swift in Sources */,
 				AADD1FBE28C9DF2500A6D38D /* CustomCameraCell.swift in Sources */,
 				AADD212928CA0F7700A6D38D /* GPUImageThresholdEdgeDetectionFilter.m in Sources */,
 				AADD216928CA0F7700A6D38D /* GPUImageSphereRefractionFilter.m in Sources */,
@@ -1371,6 +1500,7 @@
 				AADD1FC228C9DF2500A6D38D /* CustomCell_Instagram.swift in Sources */,
 				AADD217128CA0F7700A6D38D /* GPUImageDivideBlendFilter.m in Sources */,
 				AADD214128CA0F7700A6D38D /* GPUImageFASTCornerDetectionFilter.m in Sources */,
+				AAC17D3F28E05E1200B0DDB8 /* CustomVideoCompositor.m in Sources */,
 				AA62233628C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift in Sources */,
 				AADD21B328CA0F7700A6D38D /* GPUImageGlassSphereFilter.m in Sources */,
 				AADD219E28CA0F7700A6D38D /* GPUImageMovieComposition.m in Sources */,
@@ -1403,6 +1533,7 @@
 				AADD217E28CA0F7700A6D38D /* GPUImageRGBFilter.m in Sources */,
 				AADD213228CA0F7700A6D38D /* GPUImageTwoPassFilter.m in Sources */,
 				AADD216728CA0F7700A6D38D /* GPUImageTextureInput.m in Sources */,
+				AA5EE98528E1E203002B5D63 /* CustomViedeoComObjToSwift.swift in Sources */,
 				AADD218D28CA0F7700A6D38D /* GPUImageLuminosity.m in Sources */,
 				AADD213F28CA0F7700A6D38D /* GPUImageCannyEdgeDetectionFilter.m in Sources */,
 				AADD21A228CA0F7700A6D38D /* GPUImageThresholdSketchFilter.m in Sources */,

@@ -12,7 +12,58 @@ import Photos
 import MKRingProgressView
 
 
-class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICGVideoTrimmerDelegate {
+    
+    // background
+    var curHeight : CGFloat = .zero
+    var curWidth : CGFloat = 375
+    
+    // canvas
+    var w : CGFloat = 0
+    var h : CGFloat = 0
+    
+    // trim advance
+    
+    @IBOutlet weak var trimmerView: ICGVideoTrimmerView!
+    @IBOutlet weak var startEndContainer: UIView!
+    
+    @IBOutlet weak var startPosButton: UIButton!
+    @IBOutlet weak var endPosButton: UIButton!
+    
+    @IBOutlet weak var currentTimeLabel: UILabel!
+    @IBOutlet weak var endTimeLabel: UILabel!
+    
+    @IBOutlet weak var startTimeLabel: UILabel!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    @IBOutlet weak var indicatorView: YView!
+    @IBOutlet weak var startingTime: UILabel!
+    @IBOutlet weak var endingTime: UILabel!
+    
+    
+    var trimEnabled = false
+    var cutEnabled = false
+    
+    
+    var tempVideoPath: String?
+    var tempVideoPath1: String?
+    var startTime: CGFloat = 0.0
+    var stopTime: CGFloat = 0.0
+    var restartOnPlay = false
+    
+    
+    // trim
+    var isSliderEnd = true
+    var startTimestr = ""
+    var endTimestr = ""
+    var videoPlaybackPosition: CGFloat = 0.0
+    var thumbtimeSeconds: Double!
+    var rangSlider: RangeSlider! = nil
+    @IBOutlet weak var trimView: UIView!
+    @IBOutlet weak var trimFrameView: UIView!
+    @IBOutlet weak var frameContainerView: UIView!
+    
+    // slider
+
     
     // sticker
     @IBOutlet weak var stickerView: UIView!
@@ -87,7 +138,6 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
     var pickedImage : UIImage?
     @IBOutlet weak var pickedImageView: UIImageView!
     
-    @IBOutlet weak var toolbarCollectionView: UICollectionView!
     @IBOutlet weak var previewImageView: UIImageView!
     @IBOutlet weak var videoView: UIView!
     @IBOutlet weak var imageView: UIImageView!
@@ -110,12 +160,12 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        h = videoViewHeightCon.constant
+        w = UIScreen.main.bounds.width
+        
+        trimView.isHidden = true
         stickerView.isHidden = true
         adjustView.isHidden = true
-        toolbarCollectionView.delegate = self
-        toolbarCollectionView.dataSource = self
-        let nib = UINib(nibName: "ToolbarCollectionViewCell", bundle: nil)
-        toolbarCollectionView.register(nib, forCellWithReuseIdentifier: "ToolbarCollectionViewCell")
         
         
 //        myAsset = AVAsset(url: url! as URL)
@@ -135,7 +185,14 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
         ringProgressView.progress = 0.0
         progressView.addSubview(ringProgressView)
         
-       
+        
+        trimFrameView.layer.cornerRadius = 5.0
+        trimFrameView.layer.borderWidth  = 1.0
+        trimFrameView.layer.borderColor  = UIColor.white.cgColor
+        trimFrameView.layer.masksToBounds = true
+        
+        
+//        slider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
        
 //        DispatchQueue.main.asyncAfter(deadline: .now()+0.3){
 //            self.playVideo()
@@ -152,10 +209,68 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
 //        getNumberOfFrames(url: url! as URL)
 //        
 //        generateVideoPreviewImage(for: myAsset, with: CGSize(width: 60, height: 60))
+        
+//        slider.setValue(0, animated: true)
+    }
+    
+    // trim set up
+    func setupTrim(){
+        
+        let xx : CGFloat = (self.view.frame.midX - 20)/2
+        let yy : CGFloat = ((self.view.frame.maxY - trimFrameView.frame.height - startEndContainer.frame.height) / 2 - 30) / 2
+        let ww : CGFloat = 40
+        let hh : CGFloat = trimFrameView.frame.height + startEndContainer.frame.height/2
+        
+        let view = YView(frame: CGRect(x: xx, y: yy, width: ww, height: hh))
+        
+        self.view.addSubview(view)
+        self.view.bringSubviewToFront(view)
+        
+        endTimeLabel.text = Utility.second(toTimeFormat: CMTimeGetSeconds(myAsset.duration))
+        endPosButton.setImage(UIImage(named: "end_here_after_press_2"), for: .normal)
+        endPosButton.isEnabled = false
+        
+//        loadVideoView()
+        segmentedControl.removeBorder()
+        tempVideoPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("tmpMov.mov").path
+        tempVideoPath1 = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("tmpMov1.mov").path
+        
+        self.videoPlaybackPosition = 0;
+        trimmerView.themeColor = UIColor.lightGray
+        trimmerView.asset = myAsset
+        trimmerView.showsRulerView = true
+        trimmerView.rulerLabelInterval = 10
+        trimmerView.trackerColor = UIColor.cyan
+        trimmerView.delegate = self
+        // important: reset subviews
+        trimmerView.resetSubviews()
     }
     
     
+    @objc func onSliderValChanged(slider: UISlider, event: UIEvent) {
+        if let touchEvent = event.allTouches?.first {
+            switch touchEvent.phase {
+           
+            case .moved :
+                playerItem.seek(to: CMTime(seconds: Double(slider.value) * myAsset.duration.seconds, preferredTimescale: 600))
+//                DispatchQueue.global(qos: .default).async(execute: { [self] in
+//                    playerItem.seek(to: CMTime(seconds: Double(slider.value) * myAsset.duration.seconds, preferredTimescale: 600))
+//                    })
+                break
+            case .ended :
+                playerItem.seek(to: CMTime(seconds: Double(slider.value) * myAsset.duration.seconds, preferredTimescale: 600))
+//                DispatchQueue.global(qos: .default).async(execute: { [self] in
+//                    playerItem.seek(to: CMTime(seconds: Double(slider.value) * myAsset.duration.seconds, preferredTimescale: 600))
+//                })
+                break
+            default : break
+                
+            }
+        }
+    }
     
+    
+    var videoInitialSize : CGSize = .zero
     func makeAvasset(){
         PHCachingImageManager().requestAVAsset(forVideo: phAsset!, options: nil) { (avAsset, _, _) in
             
@@ -164,8 +279,29 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
             }
             
             self.myAsset = avAsset
+            
+            self.thumbtimeSeconds = Double(CMTimeGetSeconds(avAsset.duration))
            
             self.playVideo()
+            
+            let assetTrack = avAsset.tracks(withMediaType: .video).first
+            guard let assetTrack = assetTrack else {
+                return
+            }
+
+            let videoInfo = self.orientation(from: assetTrack.preferredTransform)
+            let videoSize: CGSize
+            if videoInfo.isPortrait {
+              videoSize = CGSize(
+                width: assetTrack.naturalSize.height,
+                height: assetTrack.naturalSize.width)
+            } else {
+              videoSize = assetTrack.naturalSize
+            }
+            
+            self.videoInitialSize = videoSize
+            print(self.videoInitialSize, " video size")
+            
             
 //            let composition = AVVideoComposition(asset: avAsset) { AVAsynchronousCIImageFilteringRequest in
 //
@@ -231,7 +367,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
         imageGenerator.requestedTimeToleranceAfter = .positiveInfinity
         imageGenerator.requestedTimeToleranceBefore = .positiveInfinity
                 
-        let step = Float(video.duration.seconds) / 10
+        let step = Float(video.duration.seconds) / 16
         for index in stride(from: 0, to: 10 , by: 1){
             let cmTime = CMTime(seconds: Double( Float(index) * step), preferredTimescale: 600)
             sourceTime.append(NSValue(time: cmTime))
@@ -247,7 +383,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
                 guard let image = image else { return }
                 self!.cnt += 1
                 self!.imagesFromVideo.append(image)
-                self!.toolbarCollectionView.reloadData()
+              
                 
                 
 //                print(self!.imagesFromVideo.count, " ",  self!.imagesFromVideo[self!.imagesFromVideo.count-1].size)
@@ -281,10 +417,17 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
         backavPlayerLayer.addSublayer(visualEffectView!.layer)
         
         DispatchQueue.main.async { [self] in
-            videoView.layer.addSublayer(backavPlayerLayer)
+//            videoView.layer.addSublayer(backavPlayerLayer)
             videoView.layer.addSublayer(avPlayerLayer)
             player.play()
             generateVideoPreviewImage(for: myAsset, with: .zero)
+            
+            startTimestr = "\(0.0)"
+            endTimestr   = "\(thumbtimeSeconds!)"
+            
+            createImageFrames()
+            createrangSlider()
+            setupTrim()
         }
         
         NotificationCenter.default
@@ -293,8 +436,6 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
             name: .AVPlayerItemDidPlayToEndTime,
             object: player.currentItem
         )
-        
-        
     }
     
     var isPlaying = true
@@ -320,9 +461,52 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
         playIconView.image = UIImage(named: "PlayIcon")
     }
     
-    func applyFilterBeforeExport(onComplete : @escaping(URL?) -> Void){
+    func imageFromLayer(layer:CALayer) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(layer.frame.size, layer.isOpaque, 0)
+        layer.render(in: UIGraphicsGetCurrentContext()!)
+        let outputImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return outputImage!
+    }
+    
+    func applybackground(_ img : CIImage) -> CIImage? {
+        let image = img.toUIImage()
         
-      let composition = AVVideoComposition(asset: myAsset, applyingCIFiltersWithHandler: { [self] request in
+      
+        let frame = CGRect(x: 0, y: 0, width: curWidth , height: curHeight)
+        var innerFrame = CGRect(x: 0, y: 0,
+                                            width: (Double(curWidth) * 0.3),
+                                            height: (Double(curHeight) * 0.2))
+        
+        let backgroundLayer = CALayer()
+        backgroundLayer.frame = frame
+        backgroundLayer.backgroundColor = UIColor.red.cgColor
+        backgroundLayer.contentsGravity = .resizeAspectFill
+        backgroundLayer.contents = image
+//create the backgroundLayer and fill it with firstImag
+        let overLayLayer = CALayer()
+        overLayLayer.frame = innerFrame
+        overLayLayer.contentsGravity = .resizeAspect
+        overLayLayer.contents = image
+//create the overlay layer and fill it with secondImg
+        let finalLayer = CALayer()
+        finalLayer.frame = frame
+        finalLayer.backgroundColor = UIColor.red.cgColor
+        finalLayer.addSublayer(backgroundLayer)
+        finalLayer.addSublayer(overLayLayer)
+        
+        let finalIamge = UIImage.imageWithLayer(layer: finalLayer)
+        return finalIamge?.toCIImage() ?? nil
+}
+    
+    func applyFilterBeforeExport(_ url : URL, onComplete : @escaping(URL?) -> Void){
+        
+        asset = AVURLAsset.init(url: url)
+        guard let asset = asset else {
+            return
+        }
+        
+      let composition = AVVideoComposition(asset: asset, applyingCIFiltersWithHandler: { [self] request in
             
             var outputImage : CIImage = request.sourceImage
 
@@ -349,7 +533,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
             filter.setValue(saturation, forKey: kCIInputSaturationKey)
 
             let output = filter.outputImage!
-
+            
             request.finish(with: output, context: nil)
       })
         
@@ -362,7 +546,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
         self.deleteFile(exportURL)
 
         //export the video to as per your requirement conversion
-       export = AVAssetExportSession(asset: myAsset, presetName: AVAssetExportPresetHighestQuality)
+       export = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
         
         guard let export = export else {
             return
@@ -395,169 +579,310 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
 
     }
     
-    var filterInProgress = false
-    var filterTimer : Timer?
-    
-    
-    
-    func getFilteredURL(success: @escaping (URL?) -> Void){
-       
-        if filterInProgress {
-            while(filterInProgress){
-               
+    func applyTrimCut(onComplete : @escaping (URL?) -> Void){
+        if cutEnabled {
+            getCutedVideo1{ [self] url1 in
+                getCutedVideo2 { [self] url2 in
+                    MKOVideoMerge.mergeVideoFiles([url1, url2]){ url, err in
+                        if (err != nil){
+                            print("error in mergin videos")
+                            return
+                        }
+                        onComplete(url)
+                    }
+                }
             }
-            success(ciVideoURL)
         }else {
-            success(ciVideoURL)
+            trimmedVieo { url in
+                onComplete(url)
+            }
         }
     }
     
+    func mergedVieo(onComplete : @escaping (URL?) -> Void){
+        
+    }
     
+    func getCutedVideo2(onComplete : @escaping (URL?) -> Void) {
+        let end = Float(endTimestr) ?? 0
+        let startTime = CMTime(seconds: Double(end ), preferredTimescale: 1000)
+//        let timeRange = CMTimeRange(start: startTime, end: CMTime(value: CMTimeValue(myAsset.duration.seconds), timescale: 1000))
+
+        let timeRange = CMTimeRange(start: startTime, duration: CMTime(seconds: myAsset.duration.seconds - Double(end), preferredTimescale: 1000))
+        
+        let exportURL = URL(fileURLWithPath: NSTemporaryDirectory())
+          .appendingPathComponent("videoName2")
+          .appendingPathExtension("mov")
+
+        self.deleteFile(exportURL)
+
+        //export the video to as per your requirement conversion
+       export = AVAssetExportSession(asset: myAsset, presetName: AVAssetExportPresetHighestQuality)
+        
+        guard let export = export else {
+            return
+        }
+        
+        export.outputFileType = AVFileType.mov
+        export.outputURL = exportURL
+        export.timeRange = timeRange
+
+        export.exportAsynchronously(completionHandler: {
+            switch export.status {
+            case .completed:
+                self.timer?.invalidate()
+                onComplete(exportURL)
+
+            case .failed:
+                print("failed")
+//                failure(exportSession.error?.localizedDescription)
+
+            case .cancelled:
+                print("cancelled")
+//                failure(exportSession.error?.localizedDescription)
+
+            default: print("export session failed")
+//                failure(exportSession.error?.localizedDescription)
+            }
+        })
+    }
+    
+    func getCutedVideo1(onComplete : @escaping (URL?) -> Void) {
+        let start = Float(startTimestr) ?? 0
+        let startTime = CMTime(seconds: Double(start ), preferredTimescale: 1000)
+        let timeRange = CMTimeRange(start: CMTime(value: 0, timescale: 1000), duration: startTime)
+        
+        let exportURL = URL(fileURLWithPath: NSTemporaryDirectory())
+          .appendingPathComponent("videoName1")
+          .appendingPathExtension("mov")
+
+        self.deleteFile(exportURL)
+
+        //export the video to as per your requirement conversion
+       export = AVAssetExportSession(asset: myAsset, presetName: AVAssetExportPresetHighestQuality)
+        
+        guard let export = export else {
+            return
+        }
+        
+        export.outputFileType = AVFileType.mov
+        export.outputURL = exportURL
+        export.timeRange = timeRange
+
+        export.exportAsynchronously(completionHandler: {
+            switch export.status {
+            case .completed:
+                self.timer?.invalidate()
+                onComplete(exportURL)
+
+            case .failed:
+                print("failed")
+//                failure(exportSession.error?.localizedDescription)
+
+            case .cancelled:
+                print("cancelled")
+//                failure(exportSession.error?.localizedDescription)
+
+            default: print("export session failed")
+//                failure(exportSession.error?.localizedDescription)
+            }
+        })
+    }
+    
+    func trimmedVieo(onComplete : @escaping(URL?) -> Void){
+        let start = Float(startTimestr) ?? 0
+        let end   = Float(endTimestr) ?? Float(myAsset.duration.seconds)
+        
+        let startTime = CMTime(seconds: Double(start ), preferredTimescale: 1000)
+        let endTime = CMTime(seconds: Double(end ), preferredTimescale: 1000)
+        let timeRange = CMTimeRange(start: startTime, end: endTime)
+        
+        let exportURL = URL(fileURLWithPath: NSTemporaryDirectory())
+          .appendingPathComponent("videoName")
+          .appendingPathExtension("mov")
+
+        self.deleteFile(exportURL)
+
+        //export the video to as per your requirement conversion
+       export = AVAssetExportSession(asset: myAsset, presetName: AVAssetExportPresetHighestQuality)
+        
+        guard let export = export else {
+            return
+        }
+        
+        export.outputFileType = AVFileType.mov
+        export.outputURL = exportURL
+        export.timeRange = timeRange
+
+        export.exportAsynchronously(completionHandler: {
+            switch export.status {
+            case .completed:
+                self.timer?.invalidate()
+                onComplete(exportURL)
+
+            case .failed:
+                print("failed")
+//                failure(exportSession.error?.localizedDescription)
+
+            case .cancelled:
+                print("cancelled")
+//                failure(exportSession.error?.localizedDescription)
+
+            default: print("export session failed")
+//                failure(exportSession.error?.localizedDescription)
+            }
+        })
+        
+        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
+
+    }
     
     var asset : AVURLAsset?
     
     func exportVideo(onComplete: @escaping (URL?) -> Void){
         
-        applyFilterBeforeExport { [self] url in
-            
-            DispatchQueue.main.async { [self] in
-                asset = AVURLAsset.init(url: url!)
-                guard let asset = asset else {
-                    return
-                }
-                
-                
-                compositionnn = AVMutableComposition()
-                
-                guard
-                  let compositionTrack = compositionnn.addMutableTrack(
-                    withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid),
-                  let assetTrack = asset.tracks(withMediaType: .video).first
-                  else {
-                    print("Something is wrong with the asset.")
-                    onComplete(nil)
-                    return
-                }
-                
-                do {
-                  let timeRange = CMTimeRange(start: .zero, duration: asset.duration)
-                  try compositionTrack.insertTimeRange(timeRange, of: assetTrack, at: .zero)
-                  
-                  if let audioAssetTrack = asset.tracks(withMediaType: .audio).first,
-                    let compositionAudioTrack = compositionnn.addMutableTrack(
-                      withMediaType: .audio,
-                      preferredTrackID: kCMPersistentTrackID_Invalid) {
-                    try compositionAudioTrack.insertTimeRange(
-                      timeRange,
-                      of: audioAssetTrack,
-                      at: .zero)
-                  }
-                } catch {
-                  print(error)
-                  onComplete(nil)
-                  return
-                }
-                
-                compositionTrack.preferredTransform = assetTrack.preferredTransform
-                let videoInfo = orientation(from: assetTrack.preferredTransform)
-                
-                let videoSize: CGSize
-                if videoInfo.isPortrait {
-                  videoSize = CGSize(
-                    width: assetTrack.naturalSize.height,
-                    height: assetTrack.naturalSize.width)
-                } else {
-                  videoSize = assetTrack.naturalSize
-                }
-               
-                let outputLayer = CALayer()
-                outputLayer.frame =  CGRect(origin: .zero, size: videoSize)
-                let backgoundLayer = CALayer()
-                backgoundLayer.frame = CGRect(origin: .zero, size: videoSize)
-                let videoLayer = CALayer()
-                videoLayer.frame = CGRect(origin: .zero, size: videoSize)
-                let overlayLayer = CALayer()
-                overlayLayer.frame = CGRect(origin: .zero, size: videoSize)
-                
-        //        backgoundLayer.addSublayer(backavPlayerLayer)
-        //        videoLayer.addSublayer(avPlayerLayer)
-                
-                self.selectedStickerView?.showEditingHandlers = false
-                
-                overlayLayer.contents = stickerContainerview.asImage().cgImage
-                overlayLayer.contentsGravity = .resizeAspectFill
-                
-                outputLayer.addSublayer(backgoundLayer)
-                outputLayer.addSublayer(videoLayer)
-                outputLayer.addSublayer(overlayLayer)
-                
-                
-                let videoComposition = AVMutableVideoComposition()
-                videoComposition.renderSize = videoSize
-                videoComposition.frameDuration = CMTime(value: 1, timescale: 30)
-                videoComposition.animationTool = AVVideoCompositionCoreAnimationTool(
-                  postProcessingAsVideoLayer: videoLayer,
-                  in: outputLayer)
-                
-                let instruction = AVMutableVideoCompositionInstruction()
-                instruction.timeRange = CMTimeRange(
-                  start: .zero,
-                  duration: compositionnn.duration)
-//                instruction.timeRange = CMTimeRange(start: .zero, end: CMTime(seconds: 5, preferredTimescale: 600))
-                videoComposition.instructions = [instruction]
-                let layerInstruction = compositionLayerInstruction(
-                  for: compositionTrack,
-                  assetTrack: assetTrack)
-                instruction.layerInstructions = [layerInstruction]
-                
-                export = AVAssetExportSession(
-                  asset: compositionnn,
-                  presetName: AVAssetExportPresetHighestQuality)
-                  
-                guard let export = export else {
-                  
-                      print("Cannot create export session.")
+        applyTrimCut { [self] url in
+            guard let url = url else {
+                return
+            }
+            applyFilterBeforeExport(url){ [self] url in
+                DispatchQueue.main.async { [self] in
+                    asset = AVURLAsset.init(url: url!)
+                    guard let asset = asset else {
+                        return
+                    }
+                    
+                    
+                    compositionnn = AVMutableComposition()
+                    
+                    guard
+                      let compositionTrack = compositionnn.addMutableTrack(
+                        withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid),
+                      let assetTrack = asset.tracks(withMediaType: .video).first
+                      else {
+                        print("Something is wrong with the asset.")
+                        onComplete(nil)
+                        return
+                    }
+                    
+                    do {
+                      let timeRange = CMTimeRange(start: .zero, duration: asset.duration)
+                      try compositionTrack.insertTimeRange(timeRange, of: assetTrack, at: .zero)
+                      
+                      if let audioAssetTrack = asset.tracks(withMediaType: .audio).first,
+                        let compositionAudioTrack = compositionnn.addMutableTrack(
+                          withMediaType: .audio,
+                          preferredTrackID: kCMPersistentTrackID_Invalid) {
+                        try compositionAudioTrack.insertTimeRange(
+                          timeRange,
+                          of: audioAssetTrack,
+                          at: .zero)
+                      }
+                    } catch {
+                      print(error)
                       onComplete(nil)
                       return
-                 
-                }
-                
-                self.deleteFile(url!)
-                
-    //            let videoName = UUID().uuidString
-                let exportURL = URL(fileURLWithPath: NSTemporaryDirectory())
-                  .appendingPathComponent("videoName")
-                  .appendingPathExtension("mov")
-                
-                export.videoComposition = videoComposition
-                export.outputFileType = AVFileType.mov
-                export.outputURL = exportURL
-                
-                export.exportAsynchronously {
-                  DispatchQueue.main.async {
-                    switch export.status {
-                    case .completed:
-                        self.timer?.invalidate()
-                      onComplete(exportURL)
-                    default:
-                      self.timer?.invalidate()
-                      print("Something went wrong during export.")
-                      print(export.error ?? "unknown error")
-                      onComplete(nil)
-                      break
                     }
-                  }
+                    
+                    compositionTrack.preferredTransform = assetTrack.preferredTransform
+                    let videoInfo = orientation(from: assetTrack.preferredTransform)
+                    
+                    let videoSize: CGSize
+                    if videoInfo.isPortrait {
+                      videoSize = CGSize(
+                        width: assetTrack.naturalSize.height,
+                        height: assetTrack.naturalSize.width)
+                    } else {
+                      videoSize = assetTrack.naturalSize
+                    }
+                   
+                    let outputLayer = CALayer()
+                    outputLayer.frame =  CGRect(origin: .zero, size: videoSize)
+                    let backgoundLayer = CALayer()
+                    backgoundLayer.frame = CGRect(origin: .zero, size: videoSize)
+                    let videoLayer = CALayer()
+                    videoLayer.frame = CGRect(origin: .zero, size: videoSize)
+                    let overlayLayer = CALayer()
+                    overlayLayer.frame = CGRect(origin: .zero, size: videoSize)
+        
+                    
+                    overlayLayer.contents = stickerContainerview.asImage().cgImage
+                    overlayLayer.contentsGravity = .resizeAspectFill
+                    
+                    outputLayer.addSublayer(backgoundLayer)
+                    outputLayer.addSublayer(videoLayer)
+                    outputLayer.addSublayer(overlayLayer)
+                    
+                    
+                    let videoComposition = AVMutableVideoComposition()
+                    videoComposition.renderSize = videoSize
+                    videoComposition.frameDuration = CMTime(value: 1, timescale: 30)
+                    videoComposition.animationTool = AVVideoCompositionCoreAnimationTool(
+                      postProcessingAsVideoLayer: videoLayer,
+                      in: outputLayer)
+                    videoComposition.customVideoCompositorClass = CustomCompositor.self
+                    
+//                    let instruction1 = CustomOverlayInstruction(timerange: CMTimeRange(start: .zero, duration: compositionnn.duration) , rotateSecondAsset:false)
+                    let instruction = AVMutableVideoCompositionInstruction()
+                    instruction.timeRange = CMTimeRange(
+                      start: .zero,
+                      duration: compositionnn.duration)
+                    videoComposition.instructions = [instruction]
+                    let layerInstruction = compositionLayerInstruction(
+                      for: compositionTrack,
+                      assetTrack: assetTrack)
+                    
+                    instruction.layerInstructions = [layerInstruction]
+                    
+
+                    export = AVAssetExportSession(
+                      asset: compositionnn,
+                      presetName: AVAssetExportPresetHighestQuality)
+                      
+                    guard let export = export else {
+                      
+                          print("Cannot create export session.")
+                          onComplete(nil)
+                          return
+                     
+                    }
+                    
+                    self.deleteFile(url!)
+                    
+        //            let videoName = UUID().uuidString
+                    let exportURL = URL(fileURLWithPath: NSTemporaryDirectory())
+                      .appendingPathComponent("videoName")
+                      .appendingPathExtension("mov")
+                    
+                    export.videoComposition = videoComposition
+                    export.outputFileType = AVFileType.mov
+                    export.outputURL = exportURL
+                    
+                    export.exportAsynchronously {
+                      DispatchQueue.main.async {
+                        switch export.status {
+                        case .completed:
+                            self.timer?.invalidate()
+                          onComplete(exportURL)
+                        default:
+                          self.timer?.invalidate()
+                          print("Something went wrong during export.")
+                          print(export.error ?? "unknown error")
+                          onComplete(nil)
+                          break
+                        }
+                      }
+                    }
+                    
+                    timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
                 }
-                
-                timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
             }
-         
-            }
+        }
         
     }
     
     @objc func fireTimer(){
-        print("heyy", export?.progress)
+//        print("heyy", export?.progress)
         guard let export = export else {
             return
         }
@@ -572,8 +897,10 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
 //
 //
 //        navigationController?.pushViewController(vc, animated: true)
-//
+
+        self.selectedStickerView?.showEditingHandlers = false
         player.pause()
+        
         exportVideo { exportedURL in
             guard let exportedURL = exportedURL else {
               return
@@ -705,27 +1032,39 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
             return 0
         }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 40, height: 60)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imagesFromVideo.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = toolbarCollectionView.dequeueReusableCell(withReuseIdentifier: "ToolbarCollectionViewCell", for: indexPath) as! ToolbarCollectionViewCell
-        
-        cell.imageView.image = imagesFromVideo[indexPath.row]
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//
+//
+//        return CGSize(width: 40, height: 60)
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//
+//        return imagesFromVideo.count
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//
+////        let cell = toolbarCollectionView.dequeueReusableCell(withReuseIdentifier: "ToolbarCollectionViewCell", for: indexPath) as! ToolbarCollectionViewCell
+////
+////        cell.imageView.image = imagesFromVideo[indexPath.row]
+////        return cell
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return 0
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return 0
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//
+//
+//
+//        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+//    }
     
     var filter = CIFilter()
     fileprivate func applyFilter(item : AVPlayerItem, filter : CIFilter){
@@ -845,10 +1184,39 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
     
     func applyAdjust(item : AVPlayerItem){
        
-        composition = AVVideoComposition(asset: myAsset, applyingCIFiltersWithHandler: { [self] request in
+        let totalSecond = myAsset.duration.seconds
+        
+         composition = AVVideoComposition(asset: myAsset, applyingCIFiltersWithHandler: { [self] request in
              var outputImage : CIImage = request.sourceImage
-             cntt += 1
-             print(cntt)
+             
+//             var seconds = CMTimeGetSeconds(request.compositionTime)
+//                if seconds * 2 >= totalSecond {
+//                    seconds = totalSecond - seconds
+//                }
+             
+//             let maskImage : CIImage = (UIImage(named: "mask")?.toCIImage())!
+             
+//             guard let maskImage = maskImage else { return }
+             
+//             filter = CIFilter(name: "CIOpTile")!
+//             filter.setValue(outputImage, forKey: kCIInputImageKey)
+//             filter.setValue(60, forKey: kCIInputAngleKey)
+//             filter.setValue(1000, forKey: kCIInputWidthKey)
+//             filter.setValue(maskImage, forKey: kCIInputMaskImageKey)
+//             filter.setValue(5, forKey: kciinpush)
+//             filter.setValue(0.5, forKey: kCIInputTimeKey)
+//             filter.setValue(outputImage, forKey: kCIInputTargetImageKey)
+             
+             
+             
+//             filter.setValue( seconds / totalSecond * 6, forKey: kCIInputAmountKey)
+//             filter.setValue((100, 100), forKey: kCIInputCenterKey)
+//             filter.setValue(seconds/totalSecond*10, forKey: kCIInputRadiusKey)
+//             filter.setValue(0.5, forKey: kCIInputIntensityKey)
+//             filter.setValue(10, forKey: kCIInputScaleKey)
+            
+            
+            
              if currentFilter == .gpu {
                 let outputUIImage = applyGPUImageLookupFilter(outputImage.toUIImage(), UIImage(named: "lut1"))
                  outputImage = (outputUIImage?.toCIImage())!
@@ -901,15 +1269,14 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
 //        export.videoComposition = composition
 //
 //        export.exportAsynchronously(completionHandler: {
-//             print(export.status, "status")
 //             switch export.status {
 //             case .completed:
-//                 print("ase ====================================")
+//                 print("aise ====================================")
 //                 onComplete(exportURL)
 //
 //             case .failed:
 //                 print("failed")
-// //                failure(exportSession.error?.localizedDescription)
+//                 failure(exportSession.error?.localizedDescription)
 //
 //             case .cancelled:
 //                 print("cancelled")
@@ -919,7 +1286,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
 // //                failure(exportSession.error?.localizedDescription)
 //             }
 //         })
-        
+//
 //        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
 
     }
@@ -955,7 +1322,6 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
     }
     
     func applyAdjust(){
-        filterInProgress = true
 //        applyAdjust(item: playerItem) { url in
 //            guard let url = url else {
 //                return
@@ -1075,6 +1441,262 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
         self.stickerContainerview.addSubview(stickerView3)
         self.selectedStickerView = stickerView3
     }
+    
+    // trim
+    
+    @IBAction func trimAction(_ sender: Any) {
+        trimView.isHidden = false
+        filterView.isHidden = true
+    }
+    
+    @IBAction func trimDoneAction(_ sender: Any) {
+        trimView.isHidden = true
+        filterView.isHidden = false
+    }
+    
+    
+    //MARK: CreatingFrameImages
+    func createImageFrames()
+    {
+        //creating assets
+        let assetImgGenerate : AVAssetImageGenerator    = AVAssetImageGenerator(asset: myAsset)
+        assetImgGenerate.appliesPreferredTrackTransform = true
+        assetImgGenerate.requestedTimeToleranceAfter    = CMTime.zero;
+        assetImgGenerate.requestedTimeToleranceBefore   = CMTime.zero;
+        
+        
+        assetImgGenerate.appliesPreferredTrackTransform = true
+        let thumbTime: CMTime = myAsset.duration
+        let thumbtimeSeconds  = Int(CMTimeGetSeconds(thumbTime))
+        let maxLength         = "\(thumbtimeSeconds)" as NSString
+        
+        let thumbAvg  = thumbtimeSeconds/6
+        var startTime = 1
+        var startXPosition:CGFloat = 0.0
+        
+        //loop for 6 number of frames
+        for _ in 0...5
+        {
+            
+            let imageButton = UIButton()
+            let xPositionForEach = CGFloat(self.trimFrameView.frame.width)/6
+            imageButton.frame = CGRect(x: CGFloat(startXPosition), y: CGFloat(0), width: xPositionForEach, height: CGFloat(self.trimFrameView.frame.height))
+            do {
+                let time:CMTime = CMTimeMakeWithSeconds(Float64(startTime),preferredTimescale: Int32(maxLength.length))
+                let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
+                let image = UIImage(cgImage: img)
+                imageButton.setImage(image, for: .normal)
+            }
+            catch
+                _ as NSError
+            {
+                print("Image generation failed with error (error)")
+            }
+            
+            startXPosition = startXPosition + xPositionForEach
+            startTime = startTime + thumbAvg
+            imageButton.isUserInteractionEnabled = false
+            trimFrameView.addSubview(imageButton)
+        }
+        
+    }
+    
+    func createrangSlider()
+    {
+        //Remove slider if already present
+        let subViews = self.frameContainerView.subviews
+        for subview in subViews{
+            if subview.tag == 1000 {
+                subview.removeFromSuperview()
+            }
+        }
+        
+        rangSlider = RangeSlider(frame: frameContainerView.bounds)
+        frameContainerView.addSubview(rangSlider)
+        rangSlider.tag = 1000
+        
+        //Range slider action
+        rangSlider.addTarget(self, action: #selector(rangSliderValueChanged(_:)), for: .valueChanged)
+        
+        let time = DispatchTime.now() + Double(Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: time) {
+          
+            self.rangSlider.trackHighlightTintColor = UIColor.clear
+            self.rangSlider.curvaceousness = 1.0
+        }
+        
+    }
+    
+    @IBAction func segmentedSliderValueChanged(_ sender: Any) {
+        if((self.segmentedControl.selectedSegmentIndex) != 0){
+            self.rangSlider.trackHighlightTintColor = UIColor.black.withAlphaComponent(0.5)
+            self.rangSlider.trimTintColor = UIColor.clear
+        }else {
+            self.rangSlider.trackHighlightTintColor = UIColor.clear
+            self.rangSlider.trimTintColor = UIColor.black.withAlphaComponent(0.5)
+        }
+    }
+    
+    //MARK: rangSlider Delegate
+    @objc func rangSliderValueChanged(_ rangSlider: RangeSlider) {
+//        self.player.pause()
+        
+        if((self.segmentedControl.selectedSegmentIndex) != 0){
+            self.rangSlider.trackHighlightTintColor = UIColor.black.withAlphaComponent(0.5)
+            self.rangSlider.trimTintColor = UIColor.clear
+        }else {
+            self.rangSlider.trackHighlightTintColor = UIColor.clear
+            self.rangSlider.trimTintColor = UIColor.black.withAlphaComponent(0.5)
+        }
+        
+        if(isSliderEnd == true)
+        {
+            rangSlider.minimumValue = 0.0
+            rangSlider.maximumValue = Double(thumbtimeSeconds)
+            
+            rangSlider.upperValue = Double(thumbtimeSeconds)
+            isSliderEnd = !isSliderEnd
+        }
+        
+        startTimestr = "\(rangSlider.lowerValue)"
+        endTimestr   = "\(rangSlider.upperValue)"
+        
+        startingTime.text = String(format: "%.2f", rangSlider.lowerValue/60)
+        endingTime.text = String(format: "%.2f", rangSlider.upperValue/60)
+        
+
+        if(rangSlider.lowerLayerSelected)
+        {
+            self.seekVideo(toPos: CGFloat(rangSlider.lowerValue))
+            
+        }
+        else
+        {
+            self.seekVideo(toPos: CGFloat(rangSlider.upperValue))
+            
+        }
+        
+//        print(startTime)
+    }
+    
+    // advance trim
+    func disableSeekPosControl(_ infoDict: [AnyHashable : Any]?) {
+
+//        print(infoDict?["contentOffset"], "hello")
+        
+        let leftOverlayOriginX = CGFloat((infoDict?["lefttOverlayViewOrigin"] as? NSString)?.doubleValue ?? 0.0 )
+        let rightOverlayOriginX = CGFloat((infoDict?["rightOverlayViewOrigin"] as? NSString)?.doubleValue ?? 0.0 )
+//        let contentOffsetX = CGFloat((infoDict?["contentOffset"])! as! NSNumber) ?? 0.0
+        let contentOffsetX = CGFloat((infoDict?["contentOffset"] as? NSString)?.doubleValue ?? 0.0 )
+        let currentPosition = CGFloat((infoDict?["currentPosition"] as? NSString)?.doubleValue ?? 0.0 )
+        
+        currentTimeLabel.text = Utility.second(toTimeFormat: currentPosition)
+        seekVideo(toPos: currentPosition)
+        
+        print(contentOffsetX, currentPosition, rightOverlayOriginX)
+        
+        if contentOffsetX + UIScreen.main.bounds.width / 2 >= rightOverlayOriginX {
+            startPosButton.setImage(UIImage(named: "end_here_after_press"), for: .normal)
+            startPosButton.isEnabled = false
+        }else if contentOffsetX + UIScreen.main.bounds.width / 2 <= leftOverlayOriginX {
+            endPosButton.setImage(UIImage(named: "end_here_after_press_2"), for: .normal)
+            endPosButton.isEnabled = false
+        }else {
+            startPosButton.setImage(UIImage(named: "end_here"), for: .normal)
+            startPosButton.isEnabled = true
+            endPosButton.setImage(UIImage(named: "end_here_2"), for: .normal)
+            endPosButton.isEnabled = true
+        }
+    }
+    
+    var startTimee : CGFloat = 0.0
+    var stopTimee : CGFloat = 0.0
+    
+    func trimmerView(_ trimmerView: ICGVideoTrimmerView?, didChangeLeftPosition startTime: CGFloat, rightPosition endTime: CGFloat) {
+       
+        restartOnPlay = true
+        player.pause()
+        isPlaying = false
+//        stopPlaybackTimeChecker()
+        trimmerView?.hideTracker(true)
+
+        if startTime != startTime {
+            //then it moved the left position, we should rearrange the bar
+            seekVideoo(toPos: startTime)
+        } else {
+            // right has changed
+            seekVideoo(toPos: endTime)
+        }
+        self.startTimee = startTime
+        self.stopTimee = endTime
+
+        startTimeLabel.text = Utility.second(toTimeFormat: startTime)
+
+        endTimeLabel.text = Utility.second(toTimeFormat: endTime)
+    }
+    
+    func seekVideoo(toPos pos: CGFloat) {
+        videoPlaybackPosition = pos
+        let time = CMTimeMakeWithSeconds(videoPlaybackPosition, preferredTimescale: 20)
+        print(String(format: "seekVideoToPos time:%.2f %.2d", CMTimeGetSeconds(time), player.currentTime().timescale))
+        player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero)
+    }
+    
+    func deleteTempFile(_ videoFilePath: String?) {
+        let url = URL(fileURLWithPath: videoFilePath ?? "")
+        let fm = FileManager.default
+        let exist = fm.fileExists(atPath: url.path)
+        let err: Error? = nil
+        
+        if exist {
+            do {
+                try fm.removeItem(at: url)
+            } catch let err {
+                print(err.localizedDescription)
+            }
+            print("file deleted")
+            if (err != nil) {
+                print("file remove error, \(err?.localizedDescription)")
+            }
+        }else {
+            print("No file with that name")
+        }
+    }
+    
+    @IBAction func endButtonAction(_ sender: Any) {
+        trimmerView.setPointEnd()
+
+    }
+
+    @IBAction func startButtonAction(_ sender: Any) {
+
+        trimmerView.setPointStart()
+
+    }
+    
+    @IBAction func trimCutDoneAction(_ sender: Any) {
+        if((segmentedControl.selectedSegmentIndex) != 0){
+            cutEnabled = true
+        }else {
+            trimEnabled = true
+        }
+    }
+    
+    
+    //Seek video when slide
+    func seekVideo(toPos pos: CGFloat) {
+        self.videoPlaybackPosition = pos
+        let time: CMTime = CMTimeMakeWithSeconds(Float64(self.videoPlaybackPosition), preferredTimescale: self.player.currentTime().timescale)
+        self.player.seek(to: time, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        
+        if(pos == CGFloat(thumbtimeSeconds))
+        {
+            self.player.pause()
+        }
+    }
+
+    
+    
     // video size
     func getVideoResolution() -> CGSize? {
         guard let track = myAsset.tracks(withMediaType: AVMediaType.video).first else { return nil }
@@ -1121,6 +1743,153 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, UIC
             fatalError("Unable to delete file: \(error) : \(#function).")
         }
     }
+    
+    // canvas
+    
+    
+    @IBAction func fitAction(_ sender: Any) {
+        let vratio:CGFloat = videoInitialSize.height/videoInitialSize.width
+        
+        let hh = vratio * h
+        
+        print(vratio, hh)
+        
+        if hh <= h {
+           
+//            let ratio = videoInitialSize.width / videoInitialSize.height
+            let topS = (h - (w * vratio)) / 2
+            
+            videoViewHeightCon.constant = w * vratio
+            videoViewLeadingCon.constant = 0
+            videoViewTrailingCon.constant = 0
+            videoViewTopCon.constant = topS + 20
+            
+            videoView.layoutIfNeeded()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.1){ [self] in
+                avPlayerLayer.frame = videoView.bounds
+            }
+        }else {
+            
+            let val = h / vratio
+
+            videoViewLeadingCon.constant = (w - val) / 2
+            videoViewTrailingCon.constant = (w - val) / 2
+            videoViewHeightCon.constant = h
+            videoViewTopCon.constant = 20
+            
+            videoView.layoutIfNeeded()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.1){ [self] in
+                avPlayerLayer.frame = videoView.bounds
+            }
+        }
+        
+//        let topS = ( h - val ) / 2
+//
+       
+    }
+    
+    @IBAction func onebyoneAction(_ sender: Any) {
+        let hh = h
+        if hh > w {
+            changeHeight(1, 1)
+        }else {
+            changeWidth(hh)
+        }
+    }
+    
+    @IBAction func oneByTwo(_ sender: Any) {
+        let hh = h / 2 * 1
+        if hh > w {
+            changeHeight(1, 2)
+        }else {
+            changeWidth(hh)
+        }
+    }
+    
+    @IBAction func twoByone(_ sender: Any) {
+        let hh = h / 1 * 2
+        if hh > w {
+            changeHeight(2, 1)
+        }else {
+            changeWidth(hh)
+        }
+    }
+    
+    @IBAction func sixtenbynine(_ sender: Any) {
+        let hh = h / 9 * 16
+        if hh > w {
+            changeHeight(16, 9)
+        }else {
+            changeWidth(hh)
+        }
+    }
+    @IBAction func nineBysixteen(_ sender: Any) {
+        let hh = h / 16 * 9
+        if hh > w {
+            changeHeight(9, 16)
+        }else {
+            changeWidth(hh)
+        }
+    }
+    
+    @IBAction func foutbyfive(_ sender: Any) {
+        let hh = h / 5 * 4
+        if hh > w {
+            changeHeight(4, 5)
+        }else {
+            changeWidth(hh)
+        }
+    }
+    
+    @IBAction func fivebyfour(_ sender: Any) {
+        let hh = h / 4 * 5
+        if hh > w {
+            changeHeight(5, 4)
+        }else {
+            changeWidth(hh)
+        }
+    }
+   
+    func changeHeight(_ val1 : CGFloat, _ val2 : CGFloat){
+       
+        let val = w / val1 * val2
+        let topS = ( h - val ) / 2
+        
+        videoViewHeightCon.constant = val
+        videoViewLeadingCon.constant = 0
+        videoViewTrailingCon.constant = 0
+        videoViewTopCon.constant = topS + 20
+        
+        curHeight = val
+        
+        videoView.layoutIfNeeded()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1){ [self] in
+            avPlayerLayer.frame = videoView.bounds
+        }
+        
+//        videoView.transform = .identity
+    }
+    
+    func changeWidth(_ val : CGFloat){
+     
+        videoViewLeadingCon.constant = (w - val) / 2
+        videoViewTrailingCon.constant = (w - val) / 2
+        videoViewHeightCon.constant = h
+        videoViewTopCon.constant = 20
+        
+        videoView.layoutIfNeeded()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+0.1){ [self] in
+            avPlayerLayer.frame = videoView.bounds
+        }
+        
+      //  videoView.transform = .identity
+       
+    }
+    
 }
 
 // sticker
@@ -1156,6 +1925,11 @@ extension VideoViewController : StickerViewDelegate {
     func stickerViewDidTap(_ stickerView: StickerView) {
         self.selectedStickerView = stickerView
     }
+    
+    
 }
+
+
+
 
 

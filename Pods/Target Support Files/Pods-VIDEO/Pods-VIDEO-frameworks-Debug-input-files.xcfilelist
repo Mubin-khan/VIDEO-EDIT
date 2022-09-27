@@ -1,4 +1,5 @@
 ${PODS_ROOT}/Target Support Files/Pods-VIDEO/Pods-VIDEO-frameworks.sh
+${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework
 ${BUILT_PRODUCTS_DIR}/MKRingProgressView/MKRingProgressView.framework
 ${BUILT_PRODUCTS_DIR}/TLPhotoPicker/TLPhotoPicker.framework
 ${BUILT_PRODUCTS_DIR}/TheAnimation/TheAnimation.framework

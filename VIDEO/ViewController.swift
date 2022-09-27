@@ -200,3 +200,29 @@ extension UIView {
         }
     }
 }
+
+extension UIImage {
+    class func imageWithLayer(layer: CALayer) -> UIImage? {
+//        UIGraphicsBeginImageContextWithOptions(layer.bounds.size, layer.isOpaque, 0.0)
+////        layer.render(in: UIGraphicsGetCurrentContext()!)
+//        if let ctx = UIGraphicsGetCurrentContext() {
+//            layer.render(in: ctx)
+//        }
+//        let img = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
+//        return img
+        
+            UIGraphicsBeginImageContextWithOptions(layer.bounds.size, layer.isOpaque, UIScreen.main.scale)
+
+            defer { UIGraphicsEndImageContext() }
+
+            // Don't proceed unless we have context
+            guard let context = UIGraphicsGetCurrentContext() else {
+              return nil
+            }
+
+            layer.render(in: context)
+            return UIGraphicsGetImageFromCurrentImageContext()
+         
+    }
+}

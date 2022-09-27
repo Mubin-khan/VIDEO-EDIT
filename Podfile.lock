@@ -1,24 +1,28 @@
 PODS:
+  - MBProgressHUD (1.2.0)
   - MKRingProgressView (2.3.0)
   - TheAnimation (0.4.0)
   - TLPhotoPicker (2.1.9)
 
 DEPENDENCIES:
+  - MBProgressHUD
   - MKRingProgressView
   - TheAnimation
   - TLPhotoPicker
 
 SPEC REPOS:
   trunk:
+    - MBProgressHUD
     - MKRingProgressView
     - TheAnimation
     - TLPhotoPicker
 
 SPEC CHECKSUMS:
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   MKRingProgressView: f534209b9a1edc0beb2ea613e6b953ea2195b565
   TheAnimation: b6d6bac50365897a3aecc5a9e7b4e1461909c1a0
   TLPhotoPicker: 939c40eaad130b69f9571e61e021e8120fa76329
 
-PODFILE CHECKSUM: a4b580388c14f673d636f7d65d62a2f97e9a6f56
+PODFILE CHECKSUM: 5ed0b442bb48a8c92318beec69c1cee7bab4a1af
 
 COCOAPODS: 1.11.3

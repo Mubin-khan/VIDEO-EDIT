@@ -9,6 +9,7 @@ target 'VIDEO' do
  pod 'TheAnimation'
 pod "TLPhotoPicker"
 pod 'MKRingProgressView'
+pod 'MBProgressHUD'
 
 
 end
