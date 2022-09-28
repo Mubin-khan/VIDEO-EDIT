@@ -19,6 +19,7 @@
 		AA62233628C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA62233428C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift */; };
 		AA62233728C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA62233528C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib */; };
 		AA62C7F328DC613E007212C6 /* MKOVideoMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA62C7F228DC613E007212C6 /* MKOVideoMerge.swift */; };
+		AA7CA5E528E4794600CDC44D /* GlobalClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7CA5E428E4794600CDC44D /* GlobalClass.swift */; };
 		AA9BCB5528D9CD5D004C186D /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BCB5428D9CD5D004C186D /* RangeSlider.swift */; };
 		AA9BCB5828D9FE8E004C186D /* FrameCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9BCB5628D9FE8E004C186D /* FrameCollectionViewCell.swift */; };
 		AA9BCB5928D9FE8E004C186D /* FrameCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA9BCB5728D9FE8E004C186D /* FrameCollectionViewCell.xib */; };
@@ -250,6 +251,7 @@
 		AA62233428C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarCollectionViewCell.swift; sourceTree = "<group>"; };
 		AA62233528C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolbarCollectionViewCell.xib; sourceTree = "<group>"; };
 		AA62C7F228DC613E007212C6 /* MKOVideoMerge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MKOVideoMerge.swift; sourceTree = "<group>"; };
+		AA7CA5E428E4794600CDC44D /* GlobalClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalClass.swift; sourceTree = "<group>"; };
 		AA9BCB5428D9CD5D004C186D /* RangeSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
 		AA9BCB5628D9FE8E004C186D /* FrameCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameCollectionViewCell.swift; sourceTree = "<group>"; };
 		AA9BCB5728D9FE8E004C186D /* FrameCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FrameCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -821,6 +823,7 @@
 				AAD0B47228C5E41900DE2333 /* VideoViewController.xib */,
 				AA62233428C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift */,
 				AA62233528C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib */,
+				AA7CA5E428E4794600CDC44D /* GlobalClass.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -1466,6 +1469,7 @@
 				AADD21A028CA0F7700A6D38D /* GPUImageShiTomasiFeatureDetectionFilter.m in Sources */,
 				AADD1FAC28C9DD6C00A6D38D /* TLPhotosPicker+Extension.swift in Sources */,
 				AADD216E28CA0F7700A6D38D /* GPUImageBrightnessFilter.m in Sources */,
+				AA7CA5E528E4794600CDC44D /* GlobalClass.swift in Sources */,
 				AADD217428CA0F7700A6D38D /* GPUImagePosterizeFilter.m in Sources */,
 				AADD216528CA0F7700A6D38D /* GPUImageCropFilter.m in Sources */,
 				AADD213828CA0F7700A6D38D /* GPUImageNonMaximumSuppressionFilter.m in Sources */,

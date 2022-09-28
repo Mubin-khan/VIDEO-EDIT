@@ -178,6 +178,7 @@ extension CIImage {
         }
         return UIImage(cgImage: cgImage)
     }
+    
 }
 
 extension UIImage {

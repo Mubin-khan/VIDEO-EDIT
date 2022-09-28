@@ -27,14 +27,41 @@ class CustomOverlayInstruction: NSObject ,  AVVideoCompositionInstructionProtoco
     var rotateSecondAsset: Bool?
     //info that we are passing onto the compositor
     
-    init(timerange:CMTimeRange , rotateSecondAsset: Bool){
+    var stickerImage : CGImage
+    var currentFilter : GlobalClass.FilterStates
+    var brightness : CGFloat
+    var contrast : CGFloat
+    var saturation : CGFloat
+    var extWidth : CGFloat
+    var extHeight : CGFloat
+    
+    init(timerange:CMTimeRange , rotateSecondAsset: Bool, stickerImage : CGImage, currentFilter : GlobalClass.FilterStates, br : CGFloat, con : CGFloat, sat : CGFloat, width : CGFloat, height : CGFloat){
         self.timeRange = timerange
         self.rotateSecondAsset = rotateSecondAsset
+        self.stickerImage = stickerImage
+        self.currentFilter = currentFilter
+        self.brightness = br
+        self.contrast = con
+        self.saturation = sat
+        self.extWidth = width
+        self.extHeight = height
     }
 }
 
+
 class CustomCompositor: NSObject , AVVideoCompositing{
     
+    let context = CIContext(options: nil)
+    func convertCIImageToCGImage(inputImage: CIImage) -> CGImage? {
+        
+        if let cgImage = context.createCGImage(inputImage, from: inputImage.extent) {
+            return cgImage
+        }
+        
+        return nil
+    }
+    
+   
     private var renderContext : AVVideoCompositionRenderContext?
     //the renderContext provided to the compositor
     
@@ -65,12 +92,34 @@ class CustomCompositor: NSObject , AVVideoCompositing{
          that are assigned to the render context as well*/
          
          
+         guard let instruction = request.videoCompositionInstruction as? CustomOverlayInstruction else{
+             request.finish(with: NSError(domain: "getblix.co", code: 760, userInfo: nil))
+                             return
+                         }
+         
+//         print(instruction.rotateSecondAsset, "status")
+         
          let destinationFrame = request.renderContext.newPixelBuffer()
+         
+//         let imageWidth = Int(1280)
+//         let imageHeight = Int(1024)
+//
+//         let attributes : [NSObject:AnyObject] = [
+//             kCVPixelBufferCGImageCompatibilityKey : true as AnyObject,
+//             kCVPixelBufferCGBitmapContextCompatibilityKey : true as AnyObject
+//         ]
+//
+//         var pxbuffer: CVPixelBuffer? = nil
+//         CVPixelBufferCreate(kCFAllocatorDefault,
+//                             imageWidth,
+//                             imageHeight,
+//                             kCVPixelFormatType_32ARGB,
+//                             attributes as CFDictionary?,
+//                             &pxbuffer)
+         
         //get the destination frame from renderContext
         if(request.sourceTrackIDs.count == 1){
-            
-            print("dukse dukse ")
-
+    
         let firstFrame = request.sourceFrame(byTrackID: request.sourceTrackIDs[0].int32Value)
         let secondFrame = request.sourceFrame(byTrackID: request.sourceTrackIDs[0].int32Value)
             
@@ -93,6 +142,37 @@ class CustomCompositor: NSObject , AVVideoCompositing{
             //to correct orientation of any frame
             let destWidth = CVPixelBufferGetWidth(destinationFrame!)
             let destHeight = CVPixelBufferGetHeight(destinationFrame!)
+            
+            
+            // filter & blur
+            var topImage = CIImage(cgImage: firstImg!)
+            if instruction.currentFilter == .gpu {
+               let outputUIImage = applyGPUImageLookupFilter(topImage.toUIImage(), UIImage(named: "lut1"))
+                topImage = (outputUIImage?.toCIImage())!
+            }else if instruction.currentFilter == .mono {
+                let filterr = CIFilter(name: "CIColorMonochrome")!
+
+                filterr.setValue(topImage, forKey: kCIInputImageKey)
+                topImage = filterr.outputImage!
+            } else if instruction.currentFilter == .sepia {
+                let filterr = CIFilter(name: "CISepiaTone")!
+
+                filterr.setValue(topImage, forKey: kCIInputImageKey)
+                topImage = filterr.outputImage!
+            }
+
+            let filter = CIFilter(name: "CIColorControls")!
+
+            filter.setValue(topImage, forKey: kCIInputImageKey)
+            filter.setValue(instruction.brightness, forKey: kCIInputBrightnessKey)
+            filter.setValue(instruction.contrast, forKey: kCIInputContrastKey)
+            filter.setValue(instruction.saturation, forKey: kCIInputSaturationKey)
+            
+            let firstImage = convertCIImageToCGImage(inputImage: filter.outputImage!)
+            
+            let backUIImage = applyBlurfilter(filter.outputImage!.toUIImage())
+            let backImag1 = backUIImage?.toCIImage()
+            let backImage = convertCIImageToCGImage(inputImage: backImag1!)
 
 //            if(rotate){
 //                //you can rotate the image however you see fit or need to
@@ -103,25 +183,31 @@ class CustomCompositor: NSObject , AVVideoCompositing{
             //we will be using CALayers to make overlaying sumer simple
             let frame = CGRect(x: 0, y: 0, width: destWidth , height: destHeight)
             //this will be the background frame size
-            let innerFrame = CGRect(x: 0, y: 0,
-                                    width: (Double(destWidth) * 0.3),
-                                    height: (Double(destHeight) * 0.2))
+//            let innerFrame = CGRect(x: 0, y: 0,
+//                                    width: 1280,
+//                                    height: 720)
             //this will be the overlayFrameSize
             let backgroundLayer = CALayer()
-                            backgroundLayer.frame = frame
-                            backgroundLayer.contentsGravity = .resizeAspect
-                            backgroundLayer.contents = firstImg
-            //create the backgroundLayer and fill it with firstImag
-                            let overLayLayer = CALayer()
-                            overLayLayer.frame = innerFrame
-                            overLayLayer.contentsGravity = .resizeAspect
-                            overLayLayer.contents = secondImg
-            //create the overlay layer and fill it with secondImg
-                            let finalLayer = CALayer()
-                            finalLayer.frame = frame
-                            finalLayer.backgroundColor = UIColor.clear.cgColor
-                            finalLayer.addSublayer(backgroundLayer)
-                            finalLayer.addSublayer(overLayLayer)
+            backgroundLayer.frame = frame
+            backgroundLayer.contentsGravity = .resizeAspectFill
+            backgroundLayer.contents = backImage
+//create the backgroundLayer and fill it with firstImag
+            let overLayLayer = CALayer()
+            overLayLayer.frame = frame
+            overLayLayer.contentsGravity = .resizeAspect
+            overLayLayer.contents = firstImage
+            
+            let sticketLayer = CALayer()
+            sticketLayer.frame = frame
+            sticketLayer.contentsGravity = .resizeAspectFill
+            sticketLayer.contents = instruction.stickerImage
+//create the overlay layer and fill it with secondImg
+            let finalLayer = CALayer()
+            finalLayer.frame = frame
+            finalLayer.backgroundColor = UIColor.clear.cgColor
+            finalLayer.addSublayer(backgroundLayer)
+            finalLayer.addSublayer(overLayLayer)
+            finalLayer.addSublayer(sticketLayer)
             //add the two layers onto the final layer
             //make sure you add the backgroundLayer first
             //and then the overlay Layer
@@ -154,7 +240,7 @@ class CustomCompositor: NSObject , AVVideoCompositing{
     }
     
     func imageWithLayer(layer: CALayer) -> CGImage {
-        UIGraphicsBeginImageContextWithOptions(layer.bounds.size, layer.isOpaque, 0.0)
+        UIGraphicsBeginImageContextWithOptions(layer.bounds.size, layer.isOpaque, 1.0)
         layer.render(in: UIGraphicsGetCurrentContext()!)
             let img = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
@@ -167,6 +253,43 @@ class CustomCompositor: NSObject , AVVideoCompositing{
         return image
     }
 
+         func applyGPUImageLookupFilter(_ mainImage : UIImage?, _ topImage : UIImage?) -> UIImage?{
+             guard let inputImage = mainImage, let topImage = topImage else {
+                 return nil
+             }
+             
+             let mainPicture = GPUImagePicture(image: inputImage)
+             let topPicture = GPUImagePicture(image: topImage)
+             let lookupFiltered = GPUImageLookupFilter()
+             lookupFiltered.intensity = 1.0
+         
+             mainPicture?.addTarget(lookupFiltered)
+             topPicture?.addTarget(lookupFiltered)
+             lookupFiltered.useNextFrameForImageCapture()
+             mainPicture?.processImage()
+             topPicture?.processImage()
+             let outputImage = lookupFiltered.imageFromCurrentFramebuffer()
+             return outputImage
+
+         }
+         
+         func applyBlurfilter(_ mainImage : UIImage?) -> UIImage?{
+             guard let mainImage = mainImage else {
+                 return nil
+             }
+             
+             let mainPicture = GPUImagePicture(image: mainImage)
+             let filter = GPUImageGaussianBlurFilter()
+             filter.blurRadiusInPixels = 10
+             
+             mainPicture?.addTarget(filter)
+             filter.useNextFrameForImageCapture()
+             mainPicture?.processImage()
+             
+             let outputImge = filter.imageFromCurrentFramebuffer()
+             return outputImge
+
+         }
 
   
 

@@ -10,6 +10,7 @@ import AVFoundation
 import AVKit
 import Photos
 import MKRingProgressView
+//import VideoToolbox
 
 
 class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICGVideoTrimmerDelegate {
@@ -21,6 +22,9 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
     // canvas
     var w : CGFloat = 0
     var h : CGFloat = 0
+    
+    var finalHeight : CGFloat = 0
+    var finalWidth : CGFloat = 0
     
     // trim advance
     
@@ -56,7 +60,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
     var startTimestr = ""
     var endTimestr = ""
     var videoPlaybackPosition: CGFloat = 0.0
-    var thumbtimeSeconds: Double!
+    var thumbtimeSeconds: Int!
     var rangSlider: RangeSlider! = nil
     @IBOutlet weak var trimView: UIView!
     @IBOutlet weak var trimFrameView: UIView!
@@ -127,11 +131,11 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
     
     var currentAdjust : AdjustStates = AdjustStates.brightness
     
-    enum FilterStates {
-        case mono, sepia, gpu, none
-    }
-    
-    var currentFilter = FilterStates.none
+//    enum FilterStates {
+//        case mono, sepia, gpu, none
+//    }
+//
+    var currentFilter = GlobalClass.FilterStates.none
     
     var phAsset : PHAsset? = nil
    
@@ -280,7 +284,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             
             self.myAsset = avAsset
             
-            self.thumbtimeSeconds = Double(CMTimeGetSeconds(avAsset.duration))
+            self.thumbtimeSeconds = Int(Double(CMTimeGetSeconds(avAsset.duration)))
            
             self.playVideo()
             
@@ -469,35 +473,24 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
         return outputImage!
     }
     
-    func applybackground(_ img : CIImage) -> CIImage? {
-        let image = img.toUIImage()
+  
+    let context = CIContext(options: nil)
+    func convertCIImageToCGImage(inputImage: CIImage) -> CGImage? {
         
-      
-        let frame = CGRect(x: 0, y: 0, width: curWidth , height: curHeight)
-        var innerFrame = CGRect(x: 0, y: 0,
-                                            width: (Double(curWidth) * 0.3),
-                                            height: (Double(curHeight) * 0.2))
+        if let cgImage = context.createCGImage(inputImage, from: inputImage.extent) {
+            return cgImage
+        }
         
-        let backgroundLayer = CALayer()
-        backgroundLayer.frame = frame
-        backgroundLayer.backgroundColor = UIColor.red.cgColor
-        backgroundLayer.contentsGravity = .resizeAspectFill
-        backgroundLayer.contents = image
-//create the backgroundLayer and fill it with firstImag
-        let overLayLayer = CALayer()
-        overLayLayer.frame = innerFrame
-        overLayLayer.contentsGravity = .resizeAspect
-        overLayLayer.contents = image
-//create the overlay layer and fill it with secondImg
-        let finalLayer = CALayer()
-        finalLayer.frame = frame
-        finalLayer.backgroundColor = UIColor.red.cgColor
-        finalLayer.addSublayer(backgroundLayer)
-        finalLayer.addSublayer(overLayLayer)
-        
-        let finalIamge = UIImage.imageWithLayer(layer: finalLayer)
-        return finalIamge?.toCIImage() ?? nil
-}
+        return nil
+    }
+    
+    func imageWithLayer(layer: CALayer) -> CGImage {
+        UIGraphicsBeginImageContextWithOptions(layer.bounds.size, layer.isOpaque, 1.0)
+        layer.render(in: UIGraphicsGetCurrentContext()!)
+            let img = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+        return img!.cgImage!
+    }
     
     func applyFilterBeforeExport(_ url : URL, onComplete : @escaping(URL?) -> Void){
         
@@ -506,7 +499,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             return
         }
         
-      let composition = AVVideoComposition(asset: asset, applyingCIFiltersWithHandler: { [self] request in
+        let composition = AVVideoComposition(asset: asset, applyingCIFiltersWithHandler: { [self] request in
             
             var outputImage : CIImage = request.sourceImage
 
@@ -536,6 +529,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             
             request.finish(with: output, context: nil)
       })
+        
         
         
 
@@ -745,9 +739,9 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             guard let url = url else {
                 return
             }
-            applyFilterBeforeExport(url){ [self] url in
+//            applyFilterBeforeExport(url){ [self] url in
                 DispatchQueue.main.async { [self] in
-                    asset = AVURLAsset.init(url: url!)
+                    asset = AVURLAsset.init(url: url)
                     guard let asset = asset else {
                         return
                     }
@@ -795,39 +789,51 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
                     } else {
                       videoSize = assetTrack.naturalSize
                     }
+                    
+                    print(videoSize, "video size")
+                
+                    if finalWidth != w {
+                        finalHeight = videoSize.height
+                        finalWidth = (finalWidth / w) * videoSize.width
+                    }else if finalHeight != h {
+                        finalWidth = videoSize.width
+                        finalHeight = (finalHeight / h) * videoSize.height
+                    }else {
+                        finalWidth = videoSize.width
+                        finalHeight = videoSize.height
+                    }
+                    
+                    let extendedSize = CGSize(width: finalWidth, height: finalHeight)
+                    
+                    print(extendedSize, "extended size")
                    
                     let outputLayer = CALayer()
-                    outputLayer.frame =  CGRect(origin: .zero, size: videoSize)
-                    let backgoundLayer = CALayer()
-                    backgoundLayer.frame = CGRect(origin: .zero, size: videoSize)
-                    let videoLayer = CALayer()
-                    videoLayer.frame = CGRect(origin: .zero, size: videoSize)
-                    let overlayLayer = CALayer()
-                    overlayLayer.frame = CGRect(origin: .zero, size: videoSize)
-        
+                    outputLayer.frame =  CGRect(origin: .zero, size: extendedSize)
+                    outputLayer.backgroundColor = UIColor.clear.cgColor
+                
+
                     
-                    overlayLayer.contents = stickerContainerview.asImage().cgImage
-                    overlayLayer.contentsGravity = .resizeAspectFill
+                    let passingImage = stickerContainerview.asImage().cgImage
                     
-                    outputLayer.addSublayer(backgoundLayer)
-                    outputLayer.addSublayer(videoLayer)
-                    outputLayer.addSublayer(overlayLayer)
+                    let instruction1 = CustomOverlayInstruction(timerange: CMTimeRange(start: .zero, duration: asset.duration) , rotateSecondAsset:true, stickerImage: passingImage!, currentFilter: currentFilter , br: brightness, con: contrast, sat: saturation, width: finalWidth, height: finalHeight)
                     
+//                    let instruction2 = VideoFilterCompositionInstruction(timeRange: CMTimeRange(start: .zero, duration: asset.duration) ,sticker: passingImage!, dukse: true)
                     
                     let videoComposition = AVMutableVideoComposition()
-                    videoComposition.renderSize = videoSize
+                    videoComposition.renderSize = extendedSize
                     videoComposition.frameDuration = CMTime(value: 1, timescale: 30)
-                    videoComposition.animationTool = AVVideoCompositionCoreAnimationTool(
-                      postProcessingAsVideoLayer: videoLayer,
-                      in: outputLayer)
+//                    videoComposition.animationTool = AVVideoCompositionCoreAnimationTool(
+//                      postProcessingAsVideoLayer: videoLayer,
+//                      in: outputLayer)
+                    
                     videoComposition.customVideoCompositorClass = CustomCompositor.self
                     
-//                    let instruction1 = CustomOverlayInstruction(timerange: CMTimeRange(start: .zero, duration: compositionnn.duration) , rotateSecondAsset:false)
+
                     let instruction = AVMutableVideoCompositionInstruction()
                     instruction.timeRange = CMTimeRange(
                       start: .zero,
                       duration: compositionnn.duration)
-                    videoComposition.instructions = [instruction]
+                    videoComposition.instructions = [instruction1]
                     let layerInstruction = compositionLayerInstruction(
                       for: compositionTrack,
                       assetTrack: assetTrack)
@@ -847,7 +853,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
                      
                     }
                     
-                    self.deleteFile(url!)
+                    self.deleteFile(url)
                     
         //            let videoName = UUID().uuidString
                     let exportURL = URL(fileURLWithPath: NSTemporaryDirectory())
@@ -877,7 +883,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
                     timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
                 }
             }
-        }
+//        }
         
     }
     
@@ -1769,6 +1775,9 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             DispatchQueue.main.asyncAfter(deadline: .now()+0.1){ [self] in
                 avPlayerLayer.frame = videoView.bounds
             }
+            
+            finalWidth = 375
+            finalHeight = w * vratio
         }else {
             
             let val = h / vratio
@@ -1783,6 +1792,9 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             DispatchQueue.main.asyncAfter(deadline: .now()+0.1){ [self] in
                 avPlayerLayer.frame = videoView.bounds
             }
+            
+            finalWidth = val
+            finalHeight = h
         }
         
 //        let topS = ( h - val ) / 2
@@ -1870,6 +1882,9 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             avPlayerLayer.frame = videoView.bounds
         }
         
+        finalWidth = 375
+        finalHeight = val
+        
 //        videoView.transform = .identity
     }
     
@@ -1886,7 +1901,8 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             avPlayerLayer.frame = videoView.bounds
         }
         
-      //  videoView.transform = .identity
+        finalWidth = val
+        finalHeight = h
        
     }
     
