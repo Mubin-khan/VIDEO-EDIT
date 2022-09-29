@@ -97,26 +97,9 @@ class CustomCompositor: NSObject , AVVideoCompositing{
                              return
                          }
          
-//         print(instruction.rotateSecondAsset, "status")
-         
          let destinationFrame = request.renderContext.newPixelBuffer()
          
-//         let imageWidth = Int(1280)
-//         let imageHeight = Int(1024)
-//
-//         let attributes : [NSObject:AnyObject] = [
-//             kCVPixelBufferCGImageCompatibilityKey : true as AnyObject,
-//             kCVPixelBufferCGBitmapContextCompatibilityKey : true as AnyObject
-//         ]
-//
-//         var pxbuffer: CVPixelBuffer? = nil
-//         CVPixelBufferCreate(kCFAllocatorDefault,
-//                             imageWidth,
-//                             imageHeight,
-//                             kCVPixelFormatType_32ARGB,
-//                             attributes as CFDictionary?,
-//                             &pxbuffer)
-         
+
         //get the destination frame from renderContext
         if(request.sourceTrackIDs.count == 1){
     

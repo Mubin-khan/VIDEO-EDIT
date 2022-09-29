@@ -22,6 +22,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
     // canvas
     var w : CGFloat = 0
     var h : CGFloat = 0
+    @IBOutlet weak var canvasView: UIView!
     
     var finalHeight : CGFloat = 0
     var finalWidth : CGFloat = 0
@@ -257,15 +258,11 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
            
             case .moved :
                 playerItem.seek(to: CMTime(seconds: Double(slider.value) * myAsset.duration.seconds, preferredTimescale: 600))
-//                DispatchQueue.global(qos: .default).async(execute: { [self] in
-//                    playerItem.seek(to: CMTime(seconds: Double(slider.value) * myAsset.duration.seconds, preferredTimescale: 600))
-//                    })
+
                 break
             case .ended :
                 playerItem.seek(to: CMTime(seconds: Double(slider.value) * myAsset.duration.seconds, preferredTimescale: 600))
-//                DispatchQueue.global(qos: .default).async(execute: { [self] in
-//                    playerItem.seek(to: CMTime(seconds: Double(slider.value) * myAsset.duration.seconds, preferredTimescale: 600))
-//                })
+
                 break
             default : break
                 
@@ -299,12 +296,15 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
               videoSize = CGSize(
                 width: assetTrack.naturalSize.height,
                 height: assetTrack.naturalSize.width)
+                print("portait")
             } else {
               videoSize = assetTrack.naturalSize
+                print("landscape")
             }
             
             self.videoInitialSize = videoSize
-            print(self.videoInitialSize, " video size")
+            self.finalHeight = videoSize.height
+            self.finalWidth = videoSize.width
             
             
 //            let composition = AVVideoComposition(asset: avAsset) { AVAsynchronousCIImageFilteringRequest in
@@ -792,18 +792,11 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
                     
                     print(videoSize, "video size")
                 
-                    if finalWidth != w {
-                        finalHeight = videoSize.height
-                        finalWidth = (finalWidth / w) * videoSize.width
-                    }else if finalHeight != h {
-                        finalWidth = videoSize.width
-                        finalHeight = (finalHeight / h) * videoSize.height
-                    }else {
-                        finalWidth = videoSize.width
-                        finalHeight = videoSize.height
-                    }
+                   
+                    let fWidth : CGFloat = 720
+                    let fHeight : CGFloat = 720 / finalWidth * finalHeight
                     
-                    let extendedSize = CGSize(width: finalWidth, height: finalHeight)
+                    let extendedSize = CGSize(width: fWidth, height: fHeight)
                     
                     print(extendedSize, "extended size")
                    
@@ -1453,11 +1446,13 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
     @IBAction func trimAction(_ sender: Any) {
         trimView.isHidden = false
         filterView.isHidden = true
+        canvasView.isHidden = true
     }
     
     @IBAction func trimDoneAction(_ sender: Any) {
         trimView.isHidden = true
         filterView.isHidden = false
+        canvasView.isHidden = false
     }
     
     
@@ -1776,8 +1771,8 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
                 avPlayerLayer.frame = videoView.bounds
             }
             
-            finalWidth = 375
-            finalHeight = w * vratio
+            finalWidth = videoInitialSize.width
+            finalHeight = videoInitialSize.height
         }else {
             
             let val = h / vratio
@@ -1793,13 +1788,18 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
                 avPlayerLayer.frame = videoView.bounds
             }
             
-            finalWidth = val
-            finalHeight = h
+            finalWidth = videoInitialSize.width
+            finalHeight = videoInitialSize.height
         }
         
 //        let topS = ( h - val ) / 2
 //
        
+    }
+    
+    func setfinalWidtHeight(_ w : CGFloat, _ h : CGFloat){
+        finalWidth = videoInitialSize.width * w
+        finalHeight = videoInitialSize.height * h
     }
     
     @IBAction func onebyoneAction(_ sender: Any) {
@@ -1808,6 +1808,14 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             changeHeight(1, 1)
         }else {
             changeWidth(hh)
+        }
+        
+        if videoInitialSize.width > videoInitialSize.height {
+            finalWidth = videoInitialSize.width
+            finalHeight = videoInitialSize.width
+        }else {
+            finalHeight = videoInitialSize.height
+            finalWidth = videoInitialSize.height
         }
     }
     
@@ -1818,6 +1826,15 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
         }else {
             changeWidth(hh)
         }
+        
+        if videoInitialSize.width > videoInitialSize.height {
+            finalWidth = videoInitialSize.width
+            finalHeight = videoInitialSize.width * 2
+        }else {
+            finalHeight = videoInitialSize.height
+            finalWidth = videoInitialSize.height / 2
+        }
+
     }
     
     @IBAction func twoByone(_ sender: Any) {
@@ -1827,6 +1844,15 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
         }else {
             changeWidth(hh)
         }
+        
+        if videoInitialSize.width > videoInitialSize.height {
+            finalWidth = videoInitialSize.width
+            finalHeight = videoInitialSize.width / 2
+        }else {
+            finalHeight = videoInitialSize.height
+            finalWidth = videoInitialSize.height * 2
+        }
+
     }
     
     @IBAction func sixtenbynine(_ sender: Any) {
@@ -1836,6 +1862,15 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
         }else {
             changeWidth(hh)
         }
+        
+        if videoInitialSize.width > videoInitialSize.height {
+            finalWidth = videoInitialSize.width
+            finalHeight = videoInitialSize.width * 9 / 16
+        }else {
+            finalHeight = videoInitialSize.height
+            finalWidth = videoInitialSize.height * 16 / 9
+        }
+
     }
     @IBAction func nineBysixteen(_ sender: Any) {
         let hh = h / 16 * 9
@@ -1844,6 +1879,15 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
         }else {
             changeWidth(hh)
         }
+        
+        if videoInitialSize.width > videoInitialSize.height {
+            finalWidth = videoInitialSize.width
+            finalHeight = videoInitialSize.width * 16 / 9
+        }else {
+            finalHeight = videoInitialSize.height
+            finalWidth = videoInitialSize.height * 9 / 16
+        }
+
     }
     
     @IBAction func foutbyfive(_ sender: Any) {
@@ -1853,6 +1897,15 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
         }else {
             changeWidth(hh)
         }
+        
+        if videoInitialSize.width > videoInitialSize.height {
+            finalWidth = videoInitialSize.width
+            finalHeight = videoInitialSize.width * 5 / 4
+        }else {
+            finalHeight = videoInitialSize.height
+            finalWidth = videoInitialSize.height * 4 / 5
+        }
+
     }
     
     @IBAction func fivebyfour(_ sender: Any) {
@@ -1862,6 +1915,15 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
         }else {
             changeWidth(hh)
         }
+        
+        if videoInitialSize.width > videoInitialSize.height {
+            finalWidth = videoInitialSize.width
+            finalHeight = videoInitialSize.width * 4 / 5
+        }else {
+            finalHeight = videoInitialSize.height
+            finalWidth = videoInitialSize.height * 5 / 4
+        }
+
     }
    
     func changeHeight(_ val1 : CGFloat, _ val2 : CGFloat){
@@ -1882,8 +1944,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             avPlayerLayer.frame = videoView.bounds
         }
         
-        finalWidth = 375
-        finalHeight = val
+        
         
 //        videoView.transform = .identity
     }
@@ -1901,8 +1962,7 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
             avPlayerLayer.frame = videoView.bounds
         }
         
-        finalWidth = val
-        finalHeight = h
+        
        
     }
     

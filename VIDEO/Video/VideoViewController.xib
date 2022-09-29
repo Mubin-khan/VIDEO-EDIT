@@ -13,6 +13,7 @@
             <connections>
                 <outlet property="adjustSlider" destination="2fE-iR-Nzj" id="t7I-i8-S04"/>
                 <outlet property="adjustView" destination="rR4-45-3hp" id="gqc-rQ-Aa5"/>
+                <outlet property="canvasView" destination="Jyy-yy-6ca" id="oRU-Xh-uzE"/>
                 <outlet property="currentTimeLabel" destination="svB-zU-VIc" id="IDz-WZ-9f0"/>
                 <outlet property="endPosButton" destination="IwY-9P-sDM" id="G50-Dl-jqI"/>
                 <outlet property="endTimeLabel" destination="BSk-03-Z0f" id="PnW-Je-cjQ"/>
@@ -45,7 +46,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L8s-jF-6XO" userLabel="TrimView">
-                    <rect key="frame" x="0.0" y="496" width="414" height="400"/>
+                    <rect key="frame" x="0.0" y="471" width="414" height="425"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8GE-zt-bUN" userLabel="FrameContainerView">
                             <rect key="frame" x="20" y="20" width="374" height="40"/>
@@ -231,10 +232,10 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ntS-l9-2S9">
-                    <rect key="frame" x="0.0" y="64" width="414" height="400"/>
+                    <rect key="frame" x="0.0" y="64" width="414" height="375"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7B9-tg-Sf5" userLabel="StickerContainerView">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="400"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="375"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                     </subviews>
@@ -243,12 +244,12 @@
                         <constraint firstAttribute="trailing" secondItem="7B9-tg-Sf5" secondAttribute="trailing" id="6p5-F6-BMI"/>
                         <constraint firstItem="7B9-tg-Sf5" firstAttribute="leading" secondItem="ntS-l9-2S9" secondAttribute="leading" id="HrN-k1-5Ur"/>
                         <constraint firstItem="7B9-tg-Sf5" firstAttribute="top" secondItem="ntS-l9-2S9" secondAttribute="top" id="L6A-qP-eqa"/>
-                        <constraint firstAttribute="height" constant="400" id="Lod-ha-bU0"/>
+                        <constraint firstAttribute="height" constant="375" id="Lod-ha-bU0"/>
                         <constraint firstAttribute="bottom" secondItem="7B9-tg-Sf5" secondAttribute="bottom" id="bHR-hV-VA1"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iCU-T9-SPd">
-                    <rect key="frame" x="192" y="249" width="30" height="30"/>
+                    <rect key="frame" x="192" y="236.5" width="30" height="30"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PuaseIcon" translatesAutoresizingMaskIntoConstraints="NO" id="hkn-rl-z5i">
                             <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
@@ -278,7 +279,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btc-uG-fre">
-                    <rect key="frame" x="310.5" y="466" width="53.5" height="31"/>
+                    <rect key="frame" x="310.5" y="441" width="53.5" height="31"/>
                     <state key="normal" title="Button"/>
                     <buttonConfiguration key="configuration" style="plain" title="save"/>
                     <connections>
