@@ -133,7 +133,7 @@ class RangeSlider: UIControl {
     }
     
     var gapBetweenThumbs: Double {
-        return 0.6 * Double(thumbWidth) * (maximumValue - minimumValue) / Double(bounds.width)
+        return 0.0 * Double(thumbWidth) * (maximumValue - minimumValue) / Double(bounds.width)
     }
     
     @IBInspectable var trimTintColor: UIColor = UIColor.clear {
@@ -296,11 +296,13 @@ class RangeSlider: UIControl {
         // Update the values
         if lowerThumbLayer.highlighted {
           let lv = boundValue(lowerValue + deltaValue, toLowerValue: minimumValue, upperValue: upperValue - gapBetweenThumbs)
+            print(upperValue, lv)
             if upperValue - lv >= 1 {
                 lowerValue = lv
             }
         } else if upperThumbLayer.highlighted {
             let uv = boundValue(upperValue + deltaValue, toLowerValue: lowerValue + gapBetweenThumbs, upperValue: maximumValue)
+            print(uv, lowerValue)
             if uv - lowerValue >= 1 {
                 upperValue = uv
             }

@@ -180,17 +180,20 @@ class CustomCompositor: NSObject , AVVideoCompositing{
             overLayLayer.contentsGravity = .resizeAspect
             overLayLayer.contents = firstImage
             
-            let sticketLayer = CALayer()
-            sticketLayer.frame = frame
-            sticketLayer.contentsGravity = .resizeAspectFill
-            sticketLayer.contents = instruction.stickerImage
+//            let sticketLayer = CALayer()
+//            sticketLayer.frame = frame
+//            sticketLayer.contentsGravity = .resizeAspectFill
+//            sticketLayer.contents = instruction.stickerImage
+            
+//            add(image: instruction.stickerImage, to: sticketLayer, frame: sticketLayer.frame)
+            
 //create the overlay layer and fill it with secondImg
             let finalLayer = CALayer()
             finalLayer.frame = frame
             finalLayer.backgroundColor = UIColor.clear.cgColor
             finalLayer.addSublayer(backgroundLayer)
             finalLayer.addSublayer(overLayLayer)
-            finalLayer.addSublayer(sticketLayer)
+//            finalLayer.addSublayer(sticketLayer)
             //add the two layers onto the final layer
             //make sure you add the backgroundLayer first
             //and then the overlay Layer
@@ -228,7 +231,7 @@ class CustomCompositor: NSObject , AVVideoCompositing{
             let img = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
         return img!.cgImage!
-        }
+    }
     
     func createSourceImage(from buffer: CVPixelBuffer?) -> CGImage? {
         var image : CGImage?
@@ -320,5 +323,60 @@ class CustomCompositor: NSObject , AVVideoCompositing{
 //    }
 }
 
+    func add(image: CGImage, to layer: CALayer, frame: CGRect) {
+//        let attributedText = NSAttributedString(
+//          string: "hello world",
+//          attributes: [
+//            .font: UIFont(name: "ArialRoundedMTBold", size: 60) as Any,
+//            .foregroundColor: UIColor.green,
+//            .strokeColor: UIColor.white,
+//            .strokeWidth: -3])
+//
+//        let textLayer = CATextLayer()
+//        textLayer.string = attributedText
+//        textLayer.shouldRasterize = true
+//        textLayer.rasterizationScale = UIScreen.main.scale
+//        textLayer.backgroundColor = UIColor.clear.cgColor
+//        textLayer.alignmentMode = .center
+//
+//        textLayer.frame = frame
+//        textLayer.displayIfNeeded()
+        
+        let stickerLayer = CALayer()
+        stickerLayer.backgroundColor = UIColor.clear.cgColor
+        stickerLayer.contentsGravity = .center
+        stickerLayer.contents = UIImage(named: "101")!.cgImage
+        stickerLayer.frame = CGRect(x: 100, y: 100, width: 100, height: 100)
+        
+        let degrees = 30.0
+        let radians = CGFloat(degrees * .pi / 180)
+        stickerLayer.transform = CATransform3DMakeRotation(radians, 0.0, 0.0, 1.0)
+        
+        stickerLayer.displayIfNeeded()
+        
+
+        stickerLayer.opacity = 0
+        let startVisible = CABasicAnimation(keyPath: "opacity")
+        startVisible.duration = 0.1 // for appearing in duration
+        startVisible.repeatCount = 1
+        startVisible.fromValue = 0.0
+        startVisible.toValue = 1.0
+        startVisible.beginTime = AVCoreAnimationBeginTimeAtZero  // overlay time range start second
+        startVisible.isRemovedOnCompletion = false
+        startVisible.fillMode = CAMediaTimingFillMode.forwards
+        stickerLayer.add(startVisible, forKey: "startAnimation")
+
+        let endVisible = CABasicAnimation(keyPath: "opacity")
+        endVisible.duration = 0.1 // for disappearing in duration
+        endVisible.repeatCount = 1
+        endVisible.fromValue = 1.0
+        endVisible.toValue = 0.0
+        endVisible.beginTime = 2.0 // overlay time range end second
+        endVisible.fillMode = CAMediaTimingFillMode.forwards
+        endVisible.isRemovedOnCompletion = false
+        stickerLayer.add(endVisible, forKey: "endAnimation")
+
+        layer.addSublayer(stickerLayer)
+    }
 
 }

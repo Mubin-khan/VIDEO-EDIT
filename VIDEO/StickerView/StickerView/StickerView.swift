@@ -50,6 +50,10 @@ public enum StickerViewPosition:Int {
 }
 
 public class StickerView: UIView {
+    
+    public var startTime : Float64 = .zero
+    public var endTime : Float64 = .zero
+    
     public var delegate: StickerViewDelegate!
     /// The contentView inside the sticker view.
     public var contentView:UIView!

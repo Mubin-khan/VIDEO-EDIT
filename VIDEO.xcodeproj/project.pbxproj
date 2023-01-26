@@ -8,6 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		22E0C8D5917760EE642302C8 /* Pods_VIDEO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84B7483657FBF3605986B7C7 /* Pods_VIDEO.framework */; };
+		AA0511D7298265A700201737 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0511D5298265A700201737 /* TimelineViewController.swift */; };
+		AA0511D8298265A700201737 /* TimelineViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0511D6298265A700201737 /* TimelineViewController.xib */; };
+		AA0511DC2982662100201737 /* ThumbCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0511DA2982662100201737 /* ThumbCollectionViewCell.swift */; };
+		AA0511DD2982662100201737 /* ThumbCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0511DB2982662100201737 /* ThumbCollectionViewCell.xib */; };
+		AA0511E02982711B00201737 /* TextCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0511DE2982711B00201737 /* TextCollectionViewCell.swift */; };
+		AA0511E12982711B00201737 /* TextCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0511DF2982711B00201737 /* TextCollectionViewCell.xib */; };
+		AA0511E42982776B00201737 /* TextTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0511E22982776B00201737 /* TextTableViewCell.swift */; };
+		AA0511E52982776B00201737 /* TextTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0511E32982776B00201737 /* TextTableViewCell.xib */; };
+		AA0511E929827F7F00201737 /* ContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0511E729827F7F00201737 /* ContentTableViewCell.swift */; };
+		AA0511EA29827F7F00201737 /* ContentTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0511E829827F7F00201737 /* ContentTableViewCell.xib */; };
+		AA0511EE29827FAC00201737 /* ContentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0511EC29827FAC00201737 /* ContentCollectionViewCell.swift */; };
+		AA0511EF29827FAC00201737 /* ContentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA0511ED29827FAC00201737 /* ContentCollectionViewCell.xib */; };
 		AA0DCF1728DB170F004281DE /* UISegmentedControl+WithoutBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF0728DB170F004281DE /* UISegmentedControl+WithoutBorder.m */; };
 		AA0DCF1828DB170F004281DE /* ICGRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF0A28DB170F004281DE /* ICGRulerView.m */; };
 		AA0DCF1928DB170F004281DE /* ICGVideoTrimmerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF0B28DB170F004281DE /* ICGVideoTrimmerView.m */; };
@@ -15,6 +27,7 @@
 		AA0DCF1B28DB170F004281DE /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF1028DB170F004281DE /* Utility.m */; };
 		AA0DCF1C28DB170F004281DE /* MKOVideoMerge.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF1228DB170F004281DE /* MKOVideoMerge.m */; };
 		AA0DCF1D28DB170F004281DE /* YView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF1528DB170F004281DE /* YView.m */; };
+		AA515F292982C6BF00E573A3 /* CustomTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA515F282982C6BF00E573A3 /* CustomTextView.swift */; };
 		AA5EE98528E1E203002B5D63 /* CustomViedeoComObjToSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5EE98428E1E203002B5D63 /* CustomViedeoComObjToSwift.swift */; };
 		AA62233628C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA62233428C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift */; };
 		AA62233728C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA62233528C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib */; };
@@ -232,6 +245,18 @@
 /* Begin PBXFileReference section */
 		84B7483657FBF3605986B7C7 /* Pods_VIDEO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VIDEO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3EF98A48D96D53BD2CAE2EC /* Pods-VIDEO.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VIDEO.release.xcconfig"; path = "Target Support Files/Pods-VIDEO/Pods-VIDEO.release.xcconfig"; sourceTree = "<group>"; };
+		AA0511D5298265A700201737 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
+		AA0511D6298265A700201737 /* TimelineViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TimelineViewController.xib; sourceTree = "<group>"; };
+		AA0511DA2982662100201737 /* ThumbCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbCollectionViewCell.swift; sourceTree = "<group>"; };
+		AA0511DB2982662100201737 /* ThumbCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThumbCollectionViewCell.xib; sourceTree = "<group>"; };
+		AA0511DE2982711B00201737 /* TextCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCollectionViewCell.swift; sourceTree = "<group>"; };
+		AA0511DF2982711B00201737 /* TextCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextCollectionViewCell.xib; sourceTree = "<group>"; };
+		AA0511E22982776B00201737 /* TextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextTableViewCell.swift; sourceTree = "<group>"; };
+		AA0511E32982776B00201737 /* TextTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextTableViewCell.xib; sourceTree = "<group>"; };
+		AA0511E729827F7F00201737 /* ContentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTableViewCell.swift; sourceTree = "<group>"; };
+		AA0511E829827F7F00201737 /* ContentTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContentTableViewCell.xib; sourceTree = "<group>"; };
+		AA0511EC29827FAC00201737 /* ContentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentCollectionViewCell.swift; sourceTree = "<group>"; };
+		AA0511ED29827FAC00201737 /* ContentCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContentCollectionViewCell.xib; sourceTree = "<group>"; };
 		AA0DCF0428DB170F004281DE /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 		AA0DCF0628DB170F004281DE /* UISegmentedControl+WithoutBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UISegmentedControl+WithoutBorder.h"; sourceTree = "<group>"; };
 		AA0DCF0728DB170F004281DE /* UISegmentedControl+WithoutBorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UISegmentedControl+WithoutBorder.m"; sourceTree = "<group>"; };
@@ -247,6 +272,7 @@
 		AA0DCF1328DB170F004281DE /* MKOVideoMerge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKOVideoMerge.h; sourceTree = "<group>"; };
 		AA0DCF1528DB170F004281DE /* YView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YView.m; sourceTree = "<group>"; };
 		AA0DCF1628DB170F004281DE /* YView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YView.h; sourceTree = "<group>"; };
+		AA515F282982C6BF00E573A3 /* CustomTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextView.swift; sourceTree = "<group>"; };
 		AA5EE98428E1E203002B5D63 /* CustomViedeoComObjToSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViedeoComObjToSwift.swift; sourceTree = "<group>"; };
 		AA62233428C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarCollectionViewCell.swift; sourceTree = "<group>"; };
 		AA62233528C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolbarCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -656,6 +682,42 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA0511D42982658F00201737 /* timeline */ = {
+			isa = PBXGroup;
+			children = (
+				AA515F272982C6AC00E573A3 /* customView */,
+				AA0511E629827F2C00201737 /* contentCell */,
+				AA0511D92982660600201737 /* nib */,
+				AA0511D5298265A700201737 /* TimelineViewController.swift */,
+				AA0511D6298265A700201737 /* TimelineViewController.xib */,
+			);
+			path = timeline;
+			sourceTree = "<group>";
+		};
+		AA0511D92982660600201737 /* nib */ = {
+			isa = PBXGroup;
+			children = (
+				AA0511DA2982662100201737 /* ThumbCollectionViewCell.swift */,
+				AA0511DB2982662100201737 /* ThumbCollectionViewCell.xib */,
+				AA0511DE2982711B00201737 /* TextCollectionViewCell.swift */,
+				AA0511DF2982711B00201737 /* TextCollectionViewCell.xib */,
+				AA0511E22982776B00201737 /* TextTableViewCell.swift */,
+				AA0511E32982776B00201737 /* TextTableViewCell.xib */,
+			);
+			path = nib;
+			sourceTree = "<group>";
+		};
+		AA0511E629827F2C00201737 /* contentCell */ = {
+			isa = PBXGroup;
+			children = (
+				AA0511E729827F7F00201737 /* ContentTableViewCell.swift */,
+				AA0511E829827F7F00201737 /* ContentTableViewCell.xib */,
+				AA0511EC29827FAC00201737 /* ContentCollectionViewCell.swift */,
+				AA0511ED29827FAC00201737 /* ContentCollectionViewCell.xib */,
+			);
+			path = contentCell;
+			sourceTree = "<group>";
+		};
 		AA0DCF0328DB16E7004281DE /* objectiveC */ = {
 			isa = PBXGroup;
 			children = (
@@ -736,6 +798,14 @@
 			path = picker;
 			sourceTree = "<group>";
 		};
+		AA515F272982C6AC00E573A3 /* customView */ = {
+			isa = PBXGroup;
+			children = (
+				AA515F282982C6BF00E573A3 /* CustomTextView.swift */,
+			);
+			path = customView;
+			sourceTree = "<group>";
+		};
 		AA62C7F128DC613E007212C6 /* MKOVideoMerge */ = {
 			isa = PBXGroup;
 			children = (
@@ -796,6 +866,7 @@
 		AAD0B45C28C5DEE200DE2333 /* VIDEO */ = {
 			isa = PBXGroup;
 			children = (
+				AA0511D42982658F00201737 /* timeline */,
 				AA62C7F128DC613E007212C6 /* MKOVideoMerge */,
 				AA0DCF0328DB16E7004281DE /* objectiveC */,
 				AA9BCB5328D9CD3F004C186D /* TrimSlider */,
@@ -1288,16 +1359,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAD0B46A28C5DEE400DE2333 /* LaunchScreen.storyboard in Resources */,
+				AA0511D8298265A700201737 /* TimelineViewController.xib in Resources */,
 				AADD1FBD28C9DF2500A6D38D /* CustomCell_Instagram.xib in Resources */,
+				AA0511E52982776B00201737 /* TextTableViewCell.xib in Resources */,
 				AAD0B46728C5DEE400DE2333 /* Assets.xcassets in Resources */,
+				AA0511DD2982662100201737 /* ThumbCollectionViewCell.xib in Resources */,
 				AAD0B47428C5E41900DE2333 /* VideoViewController.xib in Resources */,
 				AADD1FBF28C9DF2500A6D38D /* CustomCameraCell.xib in Resources */,
+				AA0511E12982711B00201737 /* TextCollectionViewCell.xib in Resources */,
+				AA0511EF29827FAC00201737 /* ContentCollectionViewCell.xib in Resources */,
 				AAB3AB3128D1DD6A003C56BA /* LICENSE in Resources */,
 				AAA8ECF428D76196005A4739 /* ExportViewController.xib in Resources */,
 				AAD0B46528C5DEE200DE2333 /* Main.storyboard in Resources */,
 				AA62233728C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib in Resources */,
 				AADD1FA928C9DD6C00A6D38D /* ImagePreviewViewController.xib in Resources */,
 				AA9BCB5928D9FE8E004C186D /* FrameCollectionViewCell.xib in Resources */,
+				AA0511EA29827F7F00201737 /* ContentTableViewCell.xib in Resources */,
 				AADD1FC128C9DF2500A6D38D /* CustomFooterView.xib in Resources */,
 				AADD1FBB28C9DF2500A6D38D /* CustomHeaderView.xib in Resources */,
 			);
@@ -1356,6 +1433,7 @@
 				AADD218528CA0F7700A6D38D /* GPUImagePicture+TextureSubimage.m in Sources */,
 				AADD21B428CA0F7700A6D38D /* GPUImageMotionBlurFilter.m in Sources */,
 				AADD21D328CA0F7700A6D38D /* GPUImageDarkenBlendFilter.m in Sources */,
+				AA0511EE29827FAC00201737 /* ContentCollectionViewCell.swift in Sources */,
 				AADD219A28CA0F7700A6D38D /* GPUImageRawDataOutput.m in Sources */,
 				AADD21C928CA0F7700A6D38D /* GPUImageFalseColorFilter.m in Sources */,
 				AADD21B928CA0F7700A6D38D /* GPUImageHueBlendFilter.m in Sources */,
@@ -1399,6 +1477,8 @@
 				AADD212F28CA0F7700A6D38D /* GPUImageSobelEdgeDetectionFilter.m in Sources */,
 				AADD217F28CA0F7700A6D38D /* GPUImageFramebufferCache.m in Sources */,
 				AADD21BB28CA0F7700A6D38D /* GPUImageAddBlendFilter.m in Sources */,
+				AA0511E929827F7F00201737 /* ContentTableViewCell.swift in Sources */,
+				AA0511DC2982662100201737 /* ThumbCollectionViewCell.swift in Sources */,
 				AADD219F28CA0F7700A6D38D /* GPUImageThreeInputFilter.m in Sources */,
 				AADD21CE28CA0F7700A6D38D /* GPUImageFilter.m in Sources */,
 				AADD217A28CA0F7700A6D38D /* GPUImageFramebuffer.m in Sources */,
@@ -1447,6 +1527,7 @@
 				AADD215328CA0F7700A6D38D /* GPUImageAlphaBlendFilter.m in Sources */,
 				AADD21BC28CA0F7700A6D38D /* GPUImageNormalBlendFilter.m in Sources */,
 				AADD218428CA0F7700A6D38D /* GPUImagePicture.m in Sources */,
+				AA515F292982C6BF00E573A3 /* CustomTextView.swift in Sources */,
 				AADD21A328CA0F7700A6D38D /* GPUImageRGBOpeningFilter.m in Sources */,
 				AA0DCF1C28DB170F004281DE /* MKOVideoMerge.m in Sources */,
 				AADD213C28CA0F7700A6D38D /* GPUImageGrayscaleFilter.m in Sources */,
@@ -1540,12 +1621,14 @@
 				AA5EE98528E1E203002B5D63 /* CustomViedeoComObjToSwift.swift in Sources */,
 				AADD218D28CA0F7700A6D38D /* GPUImageLuminosity.m in Sources */,
 				AADD213F28CA0F7700A6D38D /* GPUImageCannyEdgeDetectionFilter.m in Sources */,
+				AA0511E02982711B00201737 /* TextCollectionViewCell.swift in Sources */,
 				AADD21A228CA0F7700A6D38D /* GPUImageThresholdSketchFilter.m in Sources */,
 				AADD21BF28CA0F7700A6D38D /* GPUImageNobleCornerDetectionFilter.m in Sources */,
 				AADD21C528CA0F7700A6D38D /* GPUImageExposureFilter.m in Sources */,
 				AAD0B47328C5E41900DE2333 /* VideoViewController.swift in Sources */,
 				AADD214228CA0F7700A6D38D /* GPUImageVibranceFilter.m in Sources */,
 				AADD213D28CA0F7700A6D38D /* GPUImageMovie.m in Sources */,
+				AA0511D7298265A700201737 /* TimelineViewController.swift in Sources */,
 				AADD21C228CA0F7700A6D38D /* GPUImageKuwaharaFilter.m in Sources */,
 				AADD218228CA0F7700A6D38D /* GPUImageMovieWriter.m in Sources */,
 				AAA8ECF328D76196005A4739 /* ExportViewController.swift in Sources */,
@@ -1553,6 +1636,7 @@
 				AADD21CA28CA0F7700A6D38D /* GPUImagePolkaDotFilter.m in Sources */,
 				AADD212628CA0F7700A6D38D /* GPUImageColorBurnBlendFilter.m in Sources */,
 				AADD1FAB28C9DD6C00A6D38D /* ImagePreviewViewController.swift in Sources */,
+				AA0511E42982776B00201737 /* TextTableViewCell.swift in Sources */,
 				AADD216D28CA0F7700A6D38D /* GLProgram.m in Sources */,
 				AAD0B46028C5DEE200DE2333 /* SceneDelegate.swift in Sources */,
 				AADD21CD28CA0F7700A6D38D /* GPUImageColourFASTSamplingOperation.m in Sources */,

@@ -34,6 +34,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         var configure = TLPhotosPickerConfigure()
         configure.numberOfColumn = 3
         configure.maxSelectedAssets = 1
+        configure.singleSelectedMode = true
+        configure.allowedPhotograph = false
+        configure.allowedLivePhotos = false
+        configure.mediaType = .video
         viewController.configure = configure
 //        viewController.selectedAssets = self.selectedAssets
         self.present(viewController.wrapNavigationControllerWithoutBar(), animated: true, completion: nil)
@@ -88,11 +92,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
        if let videoURL = info[UIImagePickerController.InfoKey.mediaURL] as? NSURL {
            vc.url = videoURL
 //           let pathString = videoURL.relativePath
-           
+           self.navigationController?.pushViewController(vc, animated: true)
        }
      
        self.dismiss(animated: true, completion: nil)
-       self.navigationController?.pushViewController(vc, animated: true)
+      
    }
     
     func shouldDismissPhotoPicker(withTLPHAssets: [TLPHAsset]) -> Bool {
@@ -117,9 +121,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func dismissComplete() {
         // picker dismiss completion
 //        print("came 2 ===============")
-        let vc = VideoViewController()
-        vc.phAsset = selectedAssets.first?.phAsset
-        navigationController?.pushViewController(vc, animated: true)
+        let vc = TimelineViewController()
+        if selectedAssets.first?.phAsset != nil {
+            vc.phAsset = selectedAssets.first?.phAsset
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 
     func didExceedMaximumNumberOfSelection(picker: TLPhotosPickerViewController) {
@@ -202,6 +208,13 @@ extension UIView {
     }
 }
 
+extension CGImage {
+    func convertCGImageToCIImage() -> CIImage! {
+        var ciImage = CIImage(cgImage: self)
+        return ciImage
+    }
+}
+
 extension UIImage {
     class func imageWithLayer(layer: CALayer) -> UIImage? {
 //        UIGraphicsBeginImageContextWithOptions(layer.bounds.size, layer.isOpaque, 0.0)
@@ -225,5 +238,49 @@ extension UIImage {
             layer.render(in: context)
             return UIGraphicsGetImageFromCurrentImageContext()
          
+    }
+}
+
+struct StickerValueModel {
+    var selectedStickerCategroy : Int
+    var selectedStickerContent : Int
+    var stickerFrame : CGRect
+    var stickerOrigin : CGPoint
+    var stickerRadian : CGFloat
+    var stickerAlpha : CGFloat
+    var isFlipped : Bool
+    var stickerTag : Int
+    var startTime : Float64
+    var endTime : Float64
+    
+    init(selectedStickerCategroy: Int, selectedStickerContent: Int, stickerFrame: CGRect, stickerOrigin: CGPoint, stickerRadian: CGFloat, stickerAlpha: CGFloat, isFlipped: Bool, stickerTag: Int, startTime: Float64, endTime: Float64) {
+        self.selectedStickerCategroy = selectedStickerCategroy
+        self.selectedStickerContent = selectedStickerContent
+        self.stickerFrame = stickerFrame
+        self.stickerOrigin = stickerOrigin
+        self.stickerRadian = stickerRadian
+        self.stickerAlpha = stickerAlpha
+        self.isFlipped = isFlipped
+        self.stickerTag = stickerTag
+        self.startTime = startTime
+        self.endTime = endTime
+    }
+    
+    func isEquals(compareTo : StickerValueModel) -> Bool {
+        return self.selectedStickerCategroy == compareTo.selectedStickerCategroy &&
+        self.selectedStickerContent ==  compareTo.selectedStickerContent &&
+        self.stickerFrame ==  compareTo.stickerFrame &&
+        self.stickerRadian ==  compareTo.stickerRadian &&
+        self.stickerAlpha ==  compareTo.stickerAlpha &&
+        self.isFlipped ==  compareTo.isFlipped &&
+        self.stickerTag ==  compareTo.stickerTag &&
+        self.stickerOrigin == compareTo.stickerOrigin
+    }
+}
+
+extension UIView {
+    var rotation: Float {
+        let radians:Float = atan2f(Float(self.transform.b), Float(self.transform.a))
+        return radians
     }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ThumbCollectionViewCell" id="gTV-IL-0wX" customClass="ThumbCollectionViewCell" customModule="VIDEO" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="214" height="191"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="214" height="191"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Kir-LN-3r7">
+                        <rect key="frame" x="0.0" y="147" width="214" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="iZO-Px-Amr"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="Kir-LN-3r7" secondAttribute="bottom" id="744-sL-KxX"/>
+                <constraint firstAttribute="trailing" secondItem="Kir-LN-3r7" secondAttribute="trailing" id="d6c-Yd-JbW"/>
+                <constraint firstItem="Kir-LN-3r7" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="uAW-7O-dm5"/>
+            </constraints>
+            <size key="customSize" width="214" height="191"/>
+            <connections>
+                <outlet property="thumbImageView" destination="Kir-LN-3r7" id="gWd-Rk-8xi"/>
+            </connections>
+            <point key="canvasLocation" x="94.656488549618317" y="69.366197183098592"/>
+        </collectionViewCell>
+    </objects>
+</document>

@@ -8,6 +8,7 @@
 
 import Foundation
 import TLPhotoPicker
+import Photos
 
 extension TLPhotosPickerViewController {
     class func custom(withTLPHAssets: (([TLPHAsset]) -> Void)? = nil, didCancel: (() -> Void)? = nil) -> CustomPhotoPickerViewController {
@@ -21,3 +22,4 @@ extension TLPhotosPickerViewController {
         return navController
     }
 }
+
