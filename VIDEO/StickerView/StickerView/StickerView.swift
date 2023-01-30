@@ -301,6 +301,7 @@ public class StickerView: UIView {
     private lazy var rotateGesture = {
         return UIPanGestureRecognizer(target: self, action: #selector(handleRotateGesture(_:)))
     }()
+    
     private lazy var closeImageView:UIImageView = {
         let closeImageview = UIImageView(frame: CGRect(x: 0, y: 0, width: self.defaultInset * 2, height: self.defaultInset * 2))
         closeImageview.contentMode = UIView.ContentMode.scaleAspectFit

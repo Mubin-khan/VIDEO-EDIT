@@ -1635,7 +1635,6 @@ class VideoViewController: UIViewController, AVPlayerViewControllerDelegate, ICG
         if(rangSlider.lowerLayerSelected)
         {
             self.seekVideo(toPos: CGFloat(rangSlider.lowerValue))
-            
         }
         else
         {

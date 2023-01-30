@@ -120,7 +120,6 @@ class RangeSlider: UIControl {
     
     @IBInspectable var lowerValue: Double = 0.0 {
         didSet {
-            
             updateLayerFrames()
         }
     }
@@ -270,7 +269,6 @@ class RangeSlider: UIControl {
     
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         previouslocation = touch.location(in: self)
-        
         // Hit test the thumb layers
         if lowerThumbLayer.frame.contains(previouslocation) {
             lowerThumbLayer.highlighted = true

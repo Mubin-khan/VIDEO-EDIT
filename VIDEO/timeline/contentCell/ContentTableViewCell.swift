@@ -7,9 +7,13 @@
 
 import UIKit
 
+protocol contentTableviewCellProtocol {
+    func contentDidScroll(_ clView : UICollectionView)
+}
+
 class ContentTableViewCell: UITableViewCell, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
-
+    var delegete : contentTableviewCellProtocol?
     @IBOutlet weak var contentCollectionView: UICollectionView!
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,7 +24,7 @@ class ContentTableViewCell: UITableViewCell, UICollectionViewDelegateFlowLayout,
         contentCollectionView.delegate = self
         contentCollectionView.dataSource = self
         
-        contentCollectionView.isScrollEnabled = false
+//        contentCollectionView.isScrollEnabled = 
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -57,4 +61,12 @@ class ContentTableViewCell: UITableViewCell, UICollectionViewDelegateFlowLayout,
         CGSize(width: 800, height: collectionView.bounds.height)
     }
     
+}
+
+extension ContentTableViewCell: UICollectionViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == contentCollectionView {
+            delegete?.contentDidScroll(contentCollectionView)
+        }
+    }
 }
