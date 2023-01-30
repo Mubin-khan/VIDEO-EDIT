@@ -210,14 +210,14 @@ class BoundLayer : UIControl {
         // Update the values
         if sideScl.highlighted {
           let lv = boundValue(lowerValue + deltaValue, toLowerValue: minimumValue, upperValue: upperValue - gapBetweenThumbs)
-            print(upperValue, lv)
+            
             if upperValue - lv >= 1 {
                 lowerValue = lv
             }
          }
         else if sideScr.highlighted {
             let uv = boundValue(upperValue + deltaValue, toLowerValue: lowerValue + gapBetweenThumbs, upperValue: maximumValue)
-            print(uv, lowerValue)
+            
             if uv - lowerValue >= 1 {
                 upperValue = uv
             }

@@ -82,7 +82,6 @@ class TimelineViewController: UIViewController, UIGestureRecognizerDelegate{
         if rangeSlider.superview is CustomView {
             let st = rangeSlider.superview?.subviews[0]
             if st is CustomView2 {
-               
                 let width : Double = (rangeSlider.upperValue * 30) - (rangeSlider.lowerValue * 30) - 30
                 st!.frame = CGRect(x: Int(ceil(rangeSlider.lowerValue * 30))+30, y: 0, width: Int(ceil(width)) , height: 35)
                 st?.superview?.layoutIfNeeded()
