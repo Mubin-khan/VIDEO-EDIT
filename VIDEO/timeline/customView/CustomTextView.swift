@@ -37,7 +37,7 @@ class RangeSliderThumbLayer1: CALayer {
         let thumbPath = UIBezierPath(roundedRect: thumbFrame, cornerRadius: cornerRadius)
         
         // Fill
-        ctx.setFillColor(UIColor.black.cgColor)
+        ctx.setFillColor(UIColor.white.cgColor)
         ctx.addPath(thumbPath.cgPath)
         ctx.fillPath()
         
@@ -55,8 +55,63 @@ class RangeSliderThumbLayer1: CALayer {
     }
 }
 
+class RangeSliderThumbLayer2: CALayer {
+    
+    var highlighted: Bool = false {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    weak var rangeSlider: BoundLayer?
+    
+    var strokeColor: UIColor = UIColor.gray {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    var lineWidth: CGFloat = 0.5 {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    override func draw(in ctx: CGContext) {
+        guard let slider = rangeSlider else {
+            return
+        }
+        
+        let thumbFrame = bounds.insetBy(dx: 0.0, dy: 0.0)
+        let cornerRadius = thumbFrame.height * slider.curvaceousness / 2.0
+        let thumbPath = UIBezierPath(roundedRect: thumbFrame, cornerRadius: cornerRadius)
+        
+        // Fill
+        ctx.setFillColor(UIColor.clear.cgColor)
+        ctx.addPath(thumbPath.cgPath)
+        ctx.fillPath()
+        
+        // Outline
+        ctx.setStrokeColor(strokeColor.cgColor)
+        ctx.setLineWidth(lineWidth)
+        ctx.addPath(thumbPath.cgPath)
+        ctx.strokePath()
+        
+        if highlighted {
+            ctx.setFillColor(UIColor.black.withAlphaComponent(0.3).cgColor)
+            ctx.addPath(thumbPath.cgPath)
+            ctx.fillPath()
+        }
+    }
+}
+
+//protocol BoundDelegate {
+//    func updatedUpperValueTouchLocation(_ up : Bool)
+//    func didendTracking()
+//}
+
 class BoundLayer : UIControl {
+//    var delegate : BoundDelegate?
     fileprivate var previouslocation = CGPoint()
+    var initialOffset : CGFloat? = .zero
     
     @IBInspectable var curvaceousness: CGFloat = 0.0 {
         didSet {
@@ -112,10 +167,17 @@ class BoundLayer : UIControl {
         }
     }
     
+    @IBInspectable var midLayerColor: UIColor = UIColor.clear {
+        didSet {
+            midLayer.setNeedsDisplay()
+        }
+    }
+    
     fileprivate var thumbWidth: CGFloat = 30
     
     fileprivate let sideScl = RangeSliderThumbLayer1()
     fileprivate let sideScr = RangeSliderThumbLayer1()
+    fileprivate let midLayer = RangeSliderThumbLayer2()
     
 //    lazy var sideScl : UIControl = {
 //       let sidsc = UIControl(frame: CGRect(x: 0, y: 0, width: 5, height: 35))
@@ -148,6 +210,9 @@ class BoundLayer : UIControl {
         sideScr.frame = CGRect(x: upperThumbCenter - thumbWidth/2.0, y: 0.0, width: thumbWidth, height: 35)
         sideScr.setNeedsDisplay()
         
+        midLayer.frame = CGRect(x: lowerThumbCenter + thumbWidth/2, y: 0, width: upperThumbCenter - lowerThumbCenter - thumbWidth, height: 35)
+        midLayer.setNeedsDisplay()
+        
         CATransaction.commit()
     }
     
@@ -177,10 +242,13 @@ class BoundLayer : UIControl {
       sideScr.rangeSlider = self
       sideScr.contentsScale = UIScreen.main.scale
       layer.addSublayer(sideScr)
+      
+      midLayer.rangeSlider = self
+      midLayer.contentsScale = UIScreen.main.scale
+      layer.addSublayer(midLayer)
   }
     
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-        
         previouslocation = touch.location(in: self)
 //        print(previouslocation, sideScl.frame, sideScr.frame, "thelldod")
         // Hit test the thumb layers
@@ -193,14 +261,19 @@ class BoundLayer : UIControl {
 //            lowerLayerSelected = lowerThumbLayer.highlighted
 
         }
+        
+        else if midLayer.frame.contains(previouslocation) {
+            midLayer.highlighted = true
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        }
 //        sideScl.highlighted = true
-        return sideScl.highlighted || sideScr.highlighted
+        return sideScl.highlighted || sideScr.highlighted || midLayer.highlighted
 //        return true
     }
     
     override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         let location = touch.location(in: self)
-        
+       
         // Determine by how much the user has dragged
         let deltaLocation = Double(location.x - previouslocation.x)
         let deltaValue = (maximumValue - minimumValue) * deltaLocation / Double(bounds.width - bounds.height)
@@ -211,18 +284,32 @@ class BoundLayer : UIControl {
         if sideScl.highlighted {
           let lv = boundValue(lowerValue + deltaValue, toLowerValue: minimumValue, upperValue: upperValue - gapBetweenThumbs)
             
-            if upperValue - lv >= 1 {
+            if upperValue - lv >= 1.5 {
                 lowerValue = lv
             }
          }
         else if sideScr.highlighted {
             let uv = boundValue(upperValue + deltaValue, toLowerValue: lowerValue + gapBetweenThumbs, upperValue: maximumValue)
             
-            if uv - lowerValue >= 1 {
+            if uv - lowerValue >= 1.5 {
                 upperValue = uv
             }
         }
         
+        else if midLayer.highlighted {
+            let lv = boundValue(lowerValue + deltaValue, toLowerValue: minimumValue, upperValue: upperValue - gapBetweenThumbs)
+            let uv = boundValue(upperValue + deltaValue, toLowerValue: lowerValue + gapBetweenThumbs, upperValue: maximumValue)
+            if (upperValue - lowerValue).rounded(toPlaces: 2) == (uv - lv).rounded(toPlaces: 2) {
+                lowerValue = lv
+                upperValue = uv
+            }
+        }
+        
+//        let screenPoint1 = self.superview?.convert(CGPoint(x: upperValue*30, y: location.y), to: nil)
+       
+//        if let screenPoint1 = screenPoint1, screenPoint1.x > 300 {
+//            delegate?.updatedUpperValueTouchLocation(true)
+//        }
         sendActions(for: .valueChanged)
         return true
     }
@@ -230,6 +317,9 @@ class BoundLayer : UIControl {
     override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
         sideScl.highlighted = false
         sideScr.highlighted = false
+        midLayer.highlighted = false
+        
+//        delegate?.didendTracking()
     }
     
     func boundValue(_ value: Double, toLowerValue lowerValue: Double, upperValue: Double) -> Double {
@@ -289,7 +379,7 @@ class CustomView: UIView {
   //common func to init our view
   private func setupView() {
      
-    backgroundColor = .red
+    backgroundColor = .black
 //    sideScl.autoresizingMask = [.flexibleRightMargin, .flexibleBottomMargin]
 //      sideScr.autoresizingMask = [.flexibleLeftMargin, .flexibleBottomMargin]
 //    addSubview(sideScl)
@@ -482,15 +572,22 @@ class CustomView2: UIView, UIGestureRecognizerDelegate {
   
     var delegate : CustomView2Protocols?
     
+    
+    
     lazy var headerTitle: UILabel = {
         let headerTitle = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 30))
         headerTitle.font = UIFont.systemFont(ofSize: 22, weight: .medium)
-        headerTitle.text = "Custom View"
+//        headerTitle.text = 
         headerTitle.textAlignment = .center
         return headerTitle
       }()
     
-  
+   
+    lazy var stickerImageView : UIImageView = {
+      let stickerImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        stickerImageView.backgroundColor = .clear
+        return stickerImageView
+    }()
     
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -508,8 +605,9 @@ class CustomView2: UIView, UIGestureRecognizerDelegate {
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
       tapGesture.delegate = self
     addGestureRecognizer(tapGesture)
-    backgroundColor = .systemPink
+    backgroundColor = .yellow
     addSubview(headerTitle)
+    addSubview(stickerImageView)
   }
     
 //    private lazy var tapGesture = {
@@ -518,10 +616,6 @@ class CustomView2: UIView, UIGestureRecognizerDelegate {
     
     @objc
     func handleTap(_ recognizer: UITapGestureRecognizer) {
-//        if let delegate = self.delegate {
-//            delegate.stickerViewDidTap(self)
-//        }
-        print("hello wordldkdkdkk=======")
         delegate?.gotTouchEvent(mv: self)
     }
     

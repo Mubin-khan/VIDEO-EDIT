@@ -2059,7 +2059,12 @@ extension VideoViewController : StickerViewDelegate {
     }
     
     func stickerViewDidClose(_ stickerView: StickerView) {
-        
+        for indx in stride(from: 0, to: allStickers.count, by: 1){
+            if allStickers[indx].stickerTag == stickerView.tag {
+                allStickers.remove(at: indx)
+                break
+            }
+        }
     }
     
     func stickerViewDidTap(_ stickerView: StickerView) {
