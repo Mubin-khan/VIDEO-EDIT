@@ -27,7 +27,7 @@
 		AA0DCF1B28DB170F004281DE /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF1028DB170F004281DE /* Utility.m */; };
 		AA0DCF1C28DB170F004281DE /* MKOVideoMerge.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF1228DB170F004281DE /* MKOVideoMerge.m */; };
 		AA0DCF1D28DB170F004281DE /* YView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA0DCF1528DB170F004281DE /* YView.m */; };
-		AA515F292982C6BF00E573A3 /* CustomTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA515F282982C6BF00E573A3 /* CustomTextView.swift */; };
+		AA515F292982C6BF00E573A3 /* CustomTextStickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA515F282982C6BF00E573A3 /* CustomTextStickerView.swift */; };
 		AA5EE98528E1E203002B5D63 /* CustomViedeoComObjToSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5EE98428E1E203002B5D63 /* CustomViedeoComObjToSwift.swift */; };
 		AA62233628C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA62233428C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift */; };
 		AA62233728C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA62233528C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib */; };
@@ -272,7 +272,7 @@
 		AA0DCF1328DB170F004281DE /* MKOVideoMerge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKOVideoMerge.h; sourceTree = "<group>"; };
 		AA0DCF1528DB170F004281DE /* YView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YView.m; sourceTree = "<group>"; };
 		AA0DCF1628DB170F004281DE /* YView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YView.h; sourceTree = "<group>"; };
-		AA515F282982C6BF00E573A3 /* CustomTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextView.swift; sourceTree = "<group>"; };
+		AA515F282982C6BF00E573A3 /* CustomTextStickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextStickerView.swift; sourceTree = "<group>"; };
 		AA5EE98428E1E203002B5D63 /* CustomViedeoComObjToSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViedeoComObjToSwift.swift; sourceTree = "<group>"; };
 		AA62233428C8A75B00A1D5E8 /* ToolbarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarCollectionViewCell.swift; sourceTree = "<group>"; };
 		AA62233528C8A75B00A1D5E8 /* ToolbarCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToolbarCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -801,7 +801,7 @@
 		AA515F272982C6AC00E573A3 /* customView */ = {
 			isa = PBXGroup;
 			children = (
-				AA515F282982C6BF00E573A3 /* CustomTextView.swift */,
+				AA515F282982C6BF00E573A3 /* CustomTextStickerView.swift */,
 			);
 			path = customView;
 			sourceTree = "<group>";
@@ -1527,7 +1527,7 @@
 				AADD215328CA0F7700A6D38D /* GPUImageAlphaBlendFilter.m in Sources */,
 				AADD21BC28CA0F7700A6D38D /* GPUImageNormalBlendFilter.m in Sources */,
 				AADD218428CA0F7700A6D38D /* GPUImagePicture.m in Sources */,
-				AA515F292982C6BF00E573A3 /* CustomTextView.swift in Sources */,
+				AA515F292982C6BF00E573A3 /* CustomTextStickerView.swift in Sources */,
 				AADD21A328CA0F7700A6D38D /* GPUImageRGBOpeningFilter.m in Sources */,
 				AA0DCF1C28DB170F004281DE /* MKOVideoMerge.m in Sources */,
 				AADD213C28CA0F7700A6D38D /* GPUImageGrayscaleFilter.m in Sources */,

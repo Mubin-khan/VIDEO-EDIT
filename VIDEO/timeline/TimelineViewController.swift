@@ -12,7 +12,7 @@ import AVFoundation
 
 class TimelineViewController: UIViewController, UIGestureRecognizerDelegate{
    
-    var thumbWidth : CGFloat = 16
+    var thumbWidth : Double = 16
     var allStickers : [StickerValueModel] = []
     var stickerTag : Int = 1
     @IBOutlet weak var stickerContainerView: UIView!
@@ -136,7 +136,8 @@ class TimelineViewController: UIViewController, UIGestureRecognizerDelegate{
         if rangeSlider.superview is CustomView {
             let st = rangeSlider.superview?.subviews[0]
             if st is CustomView2 {
-                let width : Double = (rangeSlider.upperValue * 30) - (rangeSlider.lowerValue * 30) - 30
+                print(rangeSlider.lowerValue, rangeSlider.upperValue, "two value")
+                let width : Double = (rangeSlider.upperValue * 30) - (rangeSlider.lowerValue * 30) - thumbWidth
                 st!.frame = CGRect(x: Int(ceil(rangeSlider.lowerValue * 30))+30, y: 0, width: Int(ceil(width)) , height: 35)
                 st?.superview?.layoutIfNeeded()
                 
@@ -193,8 +194,6 @@ class TimelineViewController: UIViewController, UIGestureRecognizerDelegate{
             avPlayerLayer = AVPlayerLayer(player: player)
             avPlayerLayer.frame = videoPlayerView.bounds
             
-            
-            
             DispatchQueue.main.async {
                 self.videoPlayerView.layer.addSublayer(self.avPlayerLayer)
                 self.callPeriodicTimeObserver()
@@ -235,7 +234,7 @@ class TimelineViewController: UIViewController, UIGestureRecognizerDelegate{
 //                        self.playbackSlider!.value = Float ( time );
                         for subview in stickerContainerView.subviews {
                             if let tmp = subview as? StickerView {
-                                if tmp.startTime < time && tmp.endTime > time {
+                                if tmp.startTime <= time && tmp.endTime > time {
                                     subview.isHidden = false
                                 } else {
                                     subview.isHidden = true
@@ -590,22 +589,22 @@ class TimelineViewController: UIViewController, UIGestureRecognizerDelegate{
         tmp7.tag = stickerTag
         tmp7.headerTitle.text = "Hello world"
 //        tmp7.stickerImageView.image = UIImage(named: "101")
-        
+//        print((thumbtimeSeconds + 1) * 30, (thumbtimeSeconds + 2) * 30)
         test7.addSubview(tmp7)
-        let tm7 = BoundLayer(frame: CGRect(x: 0, y: 0, width: (thumbtimeSeconds + 2) * 30, height: 35))
+        let tm7 = BoundLayer(frame: CGRect(x: 0, y: 0, width: (thumbtimeSeconds + 2) * 30 - 14 , height: 35))
         tm7.initialOffset = initialContentOffset
         tm7.clipsToBounds = true
         test7.addSubview(tm7)
 
         tm7.minimumValue = 0
-        tm7.maximumValue = thumbtimeSeconds + 1
+        tm7.maximumValue = thumbtimeSeconds + (14 / 30)
         
         tm7.lowerValue = player.currentTime().seconds
         tm7.upperValue = player.currentTime().seconds + 3
         
         stickerAddingInUI()
         
-        let width : Double = (3 * 30) - 30
+        let width : Double = (3 * 30) - thumbWidth
         tmp7.frame = CGRect(x: Int(player.currentTime().seconds * 30) + 30, y: 0, width: Int(width) , height: 35)
         tmp7.superview?.layoutIfNeeded()
         

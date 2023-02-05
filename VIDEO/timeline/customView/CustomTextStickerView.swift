@@ -21,6 +21,7 @@ class RangeSliderThumbLayer1: CALayer {
             setNeedsDisplay()
         }
     }
+    
     var lineWidth: CGFloat = 0.5 {
         didSet {
             setNeedsDisplay()
@@ -173,7 +174,7 @@ class BoundLayer : UIControl {
         }
     }
     
-    fileprivate var thumbWidth: CGFloat = 30
+    fileprivate var thumbWidth: CGFloat = 16
     
     fileprivate let sideScl = RangeSliderThumbLayer1()
     fileprivate let sideScr = RangeSliderThumbLayer1()
@@ -203,14 +204,15 @@ class BoundLayer : UIControl {
         CATransaction.setDisableActions(true)
         
         let lowerThumbCenter = CGFloat(positionForValue(lowerValue))
-        sideScl.frame = CGRect(x: lowerThumbCenter - thumbWidth/2.0, y: 0.0, width: thumbWidth, height: 35)
+        print(lowerThumbCenter, "center ")
+        sideScl.frame = CGRect(x: lowerThumbCenter - thumbWidth/2.0 + 14, y: 0.0, width: thumbWidth, height: 35)
         sideScl.setNeedsDisplay()
         
         let upperThumbCenter = CGFloat(positionForValue(upperValue))
-        sideScr.frame = CGRect(x: upperThumbCenter - thumbWidth/2.0, y: 0.0, width: thumbWidth, height: 35)
+        sideScr.frame = CGRect(x: upperThumbCenter - thumbWidth/2.0 , y: 0.0, width: thumbWidth, height: 35)
         sideScr.setNeedsDisplay()
         
-        midLayer.frame = CGRect(x: lowerThumbCenter + thumbWidth/2, y: 0, width: upperThumbCenter - lowerThumbCenter - thumbWidth, height: 35)
+        midLayer.frame = CGRect(x: lowerThumbCenter - thumbWidth/2.0 + 14 + thumbWidth , y: 0, width: upperThumbCenter - lowerThumbCenter - 30, height: 35)
         midLayer.setNeedsDisplay()
         
         CATransaction.commit()
@@ -575,16 +577,17 @@ class CustomView2: UIView, UIGestureRecognizerDelegate {
     
     
     lazy var headerTitle: UILabel = {
-        let headerTitle = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 30))
+        let headerTitle = UILabel(frame: .zero)
+        headerTitle.translatesAutoresizingMaskIntoConstraints = false
+        headerTitle.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
         headerTitle.font = UIFont.systemFont(ofSize: 22, weight: .medium)
-//        headerTitle.text = 
         headerTitle.textAlignment = .center
         return headerTitle
       }()
     
    
     lazy var stickerImageView : UIImageView = {
-      let stickerImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+      let stickerImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 35))
         stickerImageView.backgroundColor = .clear
         return stickerImageView
     }()
